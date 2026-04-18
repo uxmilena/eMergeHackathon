@@ -1358,12 +1358,32 @@
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div class="section-label">Latest Regulatory Updates</div>
-        <button class="refresh-btn" id="refresh-btn" onclick="refreshRegulations()">↻ Refresh</button>
-      </div>
-      <div id="refresh-status" style="font-size:11px;color:var(--muted);min-height:14px;margin-top:-8px;"></div>
+     <!-- Company Profile Input -->
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+  <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.22em;color:var(--muted);margin-bottom:10px;">
+    Company Profile · Canon tailors updates to your industry
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <input type="text" id="company-profile-input" 
+      placeholder="e.g., Remote SaaS company operating in CA, NY, IL..." 
+      value="Remote SaaS company; fully distributed engineering and CX teams across CA, NY, IL"
+      style="flex:1;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:4px;font-family:var(--font-body);font-size:13px;color:var(--black);outline:none;">
+    <button class="upload-btn" onclick="saveCompanyProfile()">
+      Set Industry
+    </button>
+  </div>
+  <div id="profile-status" style="font-size:11px;color:var(--muted);margin-top:8px;display:none;"></div>
+</div>
 
+<!-- Sync header -->
+<div class="sync-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+  <div class="section-label" style="margin:0;">Latest Regulatory Updates</div>
+  <button id="sync-btn" class="upload-btn" onclick="syncDashboard()">
+    ↻ Sync Now
+  </button>
+</div>
+
+<div id="sync-status" style="font-size:11px;color:var(--muted);margin-bottom:12px;display:none;"></div>
       <!-- Card 1 — Critical -->
       <div class="reg-card critical">
         <div class="card-top-row">
@@ -2518,6 +2538,134 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
         el.style.color = '#E8221A';
       }
     })();
+    // ── DASHBOARD SYNC ────────────────────────────────────
+const API_BASE = 'https://emergehackathon.onrender.com';
+
+// Store tailored topics between sync calls
+let COMPANY_TOPICS = null;
+let COMPANY_PROFILE = null;
+
+async function saveCompanyProfile() {
+  const input = document.getElementById('company-profile-input');
+  const status = document.getElementById('profile-status');
+  const description = input.value.trim();
+  
+  if (!description) {
+    status.style.display = 'block';
+    status.style.color = 'var(--red)';
+    status.textContent = 'Please describe your company first.';
+    return;
+  }
+  
+  status.style.display = 'block';
+  status.style.color = 'var(--muted)';
+  status.textContent = '⟳ Canon is tailoring regulatory topics to your industry...';
+  
+  try {
+    const res = await fetch(`${API_BASE}/company-profile`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description, states: ['CA', 'NY', 'IL'] }),
+      signal: AbortSignal.timeout(20000)
+    });
+    if (!res.ok) throw new Error(`Backend returned ${res.status}`);
+    const data = await res.json();
+    
+    COMPANY_TOPICS = data.topics;
+    COMPANY_PROFILE = data;
+    
+    status.style.color = 'var(--black)';
+    status.innerHTML = `
+      <strong>${escapeHtml(data.industry_summary)}</strong><br>
+      Watching: ${data.topics.map(t => `<code style="background:#f5f5f5;padding:1px 6px;border-radius:3px;font-size:11px;">${escapeHtml(t)}</code>`).join(' ')}<br>
+      <span style="color:var(--muted);">Excluding: ${data.excluded_domains.join(', ')}</span>
+    `;
+  } catch (err) {
+    status.style.color = 'var(--red)';
+    status.textContent = `Failed to set profile: ${err.message}`;
+  }
+}
+
+async function syncDashboard() {
+  const btn = document.getElementById('sync-btn');
+  const status = document.getElementById('sync-status');
+  const section = document.getElementById('live-sync-section');
+  
+  btn.disabled = true;
+  btn.textContent = '⟳ Syncing...';
+  status.style.display = 'block';
+  status.textContent = 'Checking Federal Register for relevant rules...';
+  
+  const topicsParam = COMPANY_TOPICS 
+    ? '?topics=' + encodeURIComponent(COMPANY_TOPICS.join(','))
+    : '';
+  
+  try {
+    const res = await fetch(`${API_BASE}/dashboard-sync${topicsParam}`, {
+      signal: AbortSignal.timeout(30000)
+    });
+    if (!res.ok) throw new Error(`Backend returned ${res.status}`);
+    const data = await res.json();
+    
+    const timestamp = new Date(data.synced_at).toLocaleString();
+    const topicLabel = COMPANY_TOPICS 
+      ? 'tailored to your industry' 
+      : 'using default topics';
+    status.textContent = `✓ Synced ${timestamp} · ${data.card_count} rules ${topicLabel}`;
+    
+    renderLiveCards(data.cards);
+    section.style.display = 'block';
+  } catch (err) {
+    status.style.color = 'var(--red)';
+    status.textContent = `Sync failed: ${err.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↻ Sync Now';
+  }
+}
+
+function renderLiveCards(cards) {
+  const container = document.getElementById('dashboard-cards');
+  if (!cards || cards.length === 0) {
+    container.innerHTML = '<div style="padding:24px;color:var(--muted);font-size:13px;">No new rules found.</div>';
+    return;
+  }
+  
+  container.innerHTML = cards.map(card => `
+    <div class="reg-card">
+      <div class="card-top-row">
+        <div class="card-tags">
+          <span class="tag tag-agency">${escapeHtml(card.source)}</span>
+          <span class="tag tag-date">${formatDate(card.date)}</span>
+        </div>
+      </div>
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin:10px 0 6px;line-height:1.4;">
+        ${escapeHtml(card.title)}
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">
+        ${escapeHtml(card.abstract || '')}
+      </div>
+      ${card.url && card.url !== '#' ? `
+        <a href="${escapeAttr(card.url)}" target="_blank" rel="noopener" 
+           style="font-size:11px;color:var(--accent);text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">
+          View on Federal Register →
+        </a>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function escapeAttr(s) { return escapeHtml(s); }
   </script>
 
 </body>
