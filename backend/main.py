@@ -8,6 +8,8 @@ Endpoints:
   POST /analyze             Claude-powered gap analysis
   POST /generate            Claude-generated announcement/Slack/email/TLDR
 """
+from dotenv import load_dotenv
+load_dotenv()
 
 import asyncio
 import json
@@ -690,7 +692,7 @@ Cover every jurisdiction's every topic. Be strict and specific — do not hedge.
         resp = await asyncio.to_thread(
             client.messages.create,
             model=CLAUDE_MODEL,
-            max_tokens=4096,
+            max_tokens=8192,
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}],
         )
