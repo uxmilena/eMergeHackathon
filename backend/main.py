@@ -551,22 +551,37 @@ async def get_federal_regulations(
     }
 
 @app.get("/dashboard-sync")
-async def dashboard_sync(topics: Optional[str] = None):
+async def dashboard_sync(topics: Optional[str] = None, exclude: Optional[str] = None):
     """
     Live pull of recent DOL rules. Optionally pass comma-separated topics to
-    override the defaults (e.g., ?topics=remote%20work,overtime,FMLA).
+    override defaults, and comma-separated exclude keywords to filter results.
     """
     topic_list = [t.strip() for t in topics.split(",")] if topics else DEFAULT_FEDERAL_TOPICS
+    exclude_terms = [e.strip().lower() for e in exclude.split(",")] if exclude else []
+    
+    # Hardcoded exclusions — industry keywords almost never relevant to office companies
+    HARD_EXCLUDES = [
+        "h-2a", "h-2b", "h–2a", "h–2b",
+        "agricultural", "farmworker", "farm labor", "herding", "livestock",
+        "migrant worker", "seasonal", "nonimmigrant", "foreign worker",
+        "temporary employment of", "adverse effect wage",
+        "longshor", "maritime", "offshore",
+        "mine safety", "msha", "coal mine", "underground mine",
+        "construction industry", "nursing home", "poultry", "meat packing",
+    ]
+    all_excludes = HARD_EXCLUDES + exclude_terms
     
     try:
         async with httpx.AsyncClient(timeout=20.0) as client:
-            tasks = [_fetch_fr_topic(client, t) for t in topic_list]
+            tasks = [_fetch_fr_topic(client, t, per_page=5) for t in topic_list]
             results = await asyncio.gather(*tasks, return_exceptions=True)
     except Exception as e:
         raise HTTPException(502, f"Federal Register sync failed: {e}")
     
     cards = []
+    filtered_count = 0
     seen_urls = set()
+    
     for topic, result in zip(topic_list, results):
         if isinstance(result, Exception):
             continue
@@ -574,10 +589,18 @@ async def dashboard_sync(topics: Optional[str] = None):
             url = doc.get("html_url")
             if not url or url in seen_urls:
                 continue
-            seen_urls.add(url)
             
             title = doc.get("title") or "Untitled rule"
             abstract = (doc.get("abstract") or "").strip()
+            
+            # Post-filter: drop cards whose title or abstract contains excluded terms
+            searchable = (title + " " + abstract).lower()
+            if any(term in searchable for term in all_excludes):
+                filtered_count += 1
+                continue
+            
+            seen_urls.add(url)
+            
             if len(abstract) > 260:
                 abstract = abstract[:257].rstrip() + "…"
             
@@ -598,6 +621,7 @@ async def dashboard_sync(topics: Optional[str] = None):
         "synced_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
         "sources_checked": ["Federal Register (DOL)"],
         "topics_watched": topic_list,
+        "filtered_out": filtered_count,
         "card_count": len(cards),
         "cards": cards[:10],
     }
@@ -665,14 +689,14 @@ def get_state_regulations(req: StatesRequest):
     return {"states": out, "unknown_states": unknown}
 
 
-async def _fetch_fr_topic(client: httpx.AsyncClient, topic: str) -> list:
+async def _fetch_fr_topic(client: httpx.AsyncClient, topic: str, per_page: int = 2) -> list:
     """Fetch top DOL final rules from Federal Register for a single topic."""
     url = "https://www.federalregister.gov/api/v1/documents.json"
     params = {
         "conditions[term]": topic,
         "conditions[agencies][]": "labor-department",
         "conditions[type][]": "RULE",
-        "per_page": 2,
+        "per_page": per_page,
     }
     r = await client.get(url, params=params)
     r.raise_for_status()
