@@ -13,7 +13,7 @@ import asyncio
 import json
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import fitz  # PyMuPDF
 import httpx
@@ -52,7 +52,7 @@ def extract_claude_text(resp) -> str:
     return "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
 
 
-def parse_json_response(raw: str) -> dict | list:
+def parse_json_response(raw: str) -> Union[dict, list]:
     """Parse Claude's JSON response, defensively stripping markdown fences."""
     cleaned = raw.strip()
     if cleaned.startswith("```"):
