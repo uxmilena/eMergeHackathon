@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+backend/uploads/*.pdf
+node_modules/
