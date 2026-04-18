@@ -6,186 +6,218 @@
   <title>Canon — Policy OS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
-  <style>
-    /* ─── RESET & BASE ─────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
+  <style>
+    /* ─── RESET ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── VARIABLES ──────────────────────────────────────── */
     :root {
-      --bg:        #fafafa;
-      --surface:   #ffffff;
-      --text:      #0a0a0a;
-      --muted:     #6b6b6b;
-      --border:    #e0e0e0;
-      --accent:    #E8221A;
-      --accent-bg: #fff5f5;
+      --red:     #E8221A;
+      --black:   #0a0a0a;
+      --white:   #fafafa;
+      --muted:   #6b6b6b;
+      --border:  #e0e0e0;
+      --surface: #ffffff;
+
       --font-display: 'Bebas Neue', sans-serif;
       --font-body:    'DM Sans', sans-serif;
+
+      --topbar-h:  56px;
+      --sidebar-w: 220px;
     }
 
+    /* ─── BASE ───────────────────────────────────────────── */
     html, body {
       height: 100%;
-      background: var(--bg);
-      color: var(--text);
+      overflow: hidden;
+      background: var(--white);
+      color: var(--black);
       font-family: var(--font-body);
       font-size: 14px;
-      line-height: 1.7;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── LAYOUT ───────────────────────────────────────────────── */
-    .app {
-      display: grid;
-      grid-template-rows: 56px 1fr;
-      grid-template-columns: 220px 1fr;
-      grid-template-areas:
-        "navbar navbar"
-        "sidebar main";
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* ─── NAVBAR ───────────────────────────────────────────────── */
-    .navbar {
-      grid-area: navbar;
+    /* ─── TOPBAR ─────────────────────────────────────────── */
+    #topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--topbar-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 32px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      position: relative;
+      padding: 0 28px;
       z-index: 100;
     }
 
-    .navbar-brand {
+    .topbar-brand {
       display: flex;
       align-items: baseline;
       gap: 10px;
     }
 
-    .navbar-logo {
+    .topbar-logo {
       font-family: var(--font-display);
-      font-size: 28px;
-      color: var(--text);
+      font-size: 22px;
       letter-spacing: 0.04em;
+      color: var(--black);
       line-height: 1;
     }
 
-    .navbar-sub {
-      font-family: var(--font-body);
+    .topbar-sub {
       font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
       font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
     }
 
-    .navbar-right {
+    .topbar-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
-    .role-badge {
-      background: var(--text);
-      color: var(--surface);
-      font-family: var(--font-body);
+    #api-status {
       font-size: 10px;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      font-weight: 600;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      transition: color 0.25s;
+    }
+
+    .topbar-badge {
+      background: var(--black);
+      color: var(--surface);
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
       padding: 5px 12px;
     }
 
-    .avatar {
-      width: 34px;
-      height: 34px;
+    .topbar-avatar {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
+      background: var(--white);
       border: 1px solid var(--border);
-      background: var(--bg);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      color: var(--text);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--black);
+      flex-shrink: 0;
     }
 
-    /* ─── SIDEBAR ──────────────────────────────────────────────── */
-    .sidebar {
-      grid-area: sidebar;
+    /* ─── SIDEBAR ────────────────────────────────────────── */
+    #sidebar {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      width: var(--sidebar-w);
+      height: calc(100vh - var(--topbar-h));
       background: var(--surface);
       border-right: 1px solid var(--border);
-      padding: 28px 0;
+      display: flex;
+      flex-direction: column;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
+      z-index: 50;
     }
 
-    .sidebar-section {
-      display: flex;
-      flex-direction: column;
+    .nav-section {
+      padding: 24px 0 8px;
     }
 
-    .sidebar-label {
+    .nav-section + .nav-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-section-label {
       font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
       font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
       padding: 0 20px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 9px 20px;
+      padding: 9px 20px 9px 18px;
       font-size: 13px;
+      font-weight: 400;
       color: var(--muted);
       cursor: pointer;
       border-left: 2px solid transparent;
-      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
       user-select: none;
     }
 
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .nav-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background 0.12s;
+    }
+
     .nav-item:hover {
-      color: var(--text);
-      background: var(--bg);
+      background: var(--white);
+      color: var(--black);
+    }
+
+    .nav-item:hover .nav-dot {
+      background: var(--muted);
     }
 
     .nav-item.active {
-      color: var(--accent);
-      border-left-color: var(--accent);
-      background: #fff9f9;
+      border-left-color: var(--red);
+      background: #fff5f5;
+      color: var(--red);
       font-weight: 500;
     }
 
-    .nav-badge {
-      background: var(--accent);
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 7px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
+    .nav-item.active .nav-dot {
+      background: var(--red);
     }
 
-    .sidebar-bottom {
-      margin-top: auto;
-      padding: 0 20px;
+    .nav-badge {
+      background: var(--red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 1;
+      padding: 2px 7px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
     }
 
     .sidebar-user {
+      margin-top: auto;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 0;
-      border-top: 1px solid var(--border);
     }
 
     .sidebar-user-info {
@@ -196,7 +228,8 @@
     .sidebar-user-name {
       font-size: 13px;
       font-weight: 500;
-      color: var(--text);
+      color: var(--black);
+      line-height: 1.3;
     }
 
     .sidebar-user-role {
@@ -206,1471 +239,143 @@
       letter-spacing: 0.1em;
     }
 
-    /* ─── MAIN CONTENT ─────────────────────────────────────────── */
-    .main {
-      grid-area: main;
+    /* ─── MAIN ───────────────────────────────────────────── */
+    #main {
+      position: fixed;
+      top: var(--topbar-h);
+      left: var(--sidebar-w);
+      right: 0;
+      bottom: 0;
       overflow-y: auto;
+      background: var(--white);
       padding: 48px 52px;
-      background: var(--bg);
     }
 
-    /* ─── SCREEN TRANSITIONS ───────────────────────────────────── */
-    .screen {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .screen.active {
-      display: block;
-      animation: fadeIn 0.2s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── TYPOGRAPHY HELPERS ───────────────────────────────────── */
-    .section-label {
-      font-family: var(--font-body);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
+    #main-content {
       color: var(--muted);
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .screen-heading {
-      font-family: var(--font-display);
-      font-size: 52px;
-      letter-spacing: 0.02em;
-      color: var(--text);
-      line-height: 1;
-      margin-bottom: 36px;
-    }
-
-    .screen-heading-sm {
-      font-family: var(--font-display);
-      font-size: 38px;
-      letter-spacing: 0.02em;
-      color: var(--text);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .screen-sub {
       font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 32px;
     }
 
-    /* ─── STAT CARDS ───────────────────────────────────────────── */
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 36px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 24px;
-    }
-
-    .stat-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--muted);
-      font-weight: 500;
-      margin-bottom: 10px;
-    }
-
-    .stat-value {
-      font-family: var(--font-display);
-      font-size: 48px;
-      line-height: 1;
-      letter-spacing: 0.02em;
-    }
-
-    .stat-value.default { color: var(--text); }
-    .stat-value.muted   { color: var(--muted); }
-    .stat-value.accent  { color: var(--accent); }
-
-    /* ─── AI FLAG BOX ──────────────────────────────────────────── */
-    .ai-flag {
-      background: var(--accent-bg);
-      border-left: 3px solid var(--accent);
-      padding: 18px 22px;
-      margin-bottom: 32px;
-    }
-
-    .ai-flag-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .ai-flag-text {
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    /* ─── DOC LIST ─────────────────────────────────────────────── */
-    .doc-list {
-      background: var(--surface);
-      border: 1px solid var(--border);
-    }
-
-    .doc-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: background 0.1s;
-    }
-
-    .doc-row:last-child { border-bottom: none; }
-
-    .doc-row:hover { background: var(--bg); }
-
-    .doc-abbr {
-      width: 40px;
-      height: 40px;
-      background: var(--text);
-      color: var(--surface);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 15px;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
-    }
-
-    .doc-info { flex: 1; min-width: 0; }
-
-    .doc-name {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .doc-meta {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* ─── STATUS PILLS ─────────────────────────────────────────── */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      font-family: var(--font-body);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-weight: 600;
-      padding: 3px 10px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .pill-current  { background: var(--text); color: var(--surface); }
-    .pill-review   { background: transparent; border: 1px solid var(--text); color: var(--text); }
-    .pill-draft    { background: #f0f0f0; color: var(--muted); }
-    .pill-pending  { background: transparent; border: 1px solid var(--muted); color: var(--muted); }
-    .pill-approved { background: var(--text); color: var(--surface); }
-    .pill-archived { background: #f0f0f0; color: var(--muted); }
-
-    /* ─── SEARCH BAR ───────────────────────────────────────────── */
-    .search-bar {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      padding: 13px 18px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--text);
-      outline: none;
-      margin-bottom: 20px;
-      transition: border-color 0.15s;
-    }
-
-    .search-bar::placeholder { color: var(--muted); }
-    .search-bar:focus { border-color: var(--text); }
-
-    /* ─── PROGRESS STEPPER ─────────────────────────────────────── */
-    .stepper {
-      display: flex;
-      align-items: center;
-      margin-bottom: 36px;
-    }
-
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .step-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .step-dot.done   { background: var(--text); color: var(--surface); }
-    .step-dot.active { background: var(--accent); color: var(--surface); }
-    .step-dot.future { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-
-    .step-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-weight: 500;
-    }
-
-    .step-label.done   { color: var(--text); }
-    .step-label.active { color: var(--accent); }
-    .step-label.future { color: var(--muted); }
-
-    .step-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-      margin: 0 10px;
-      min-width: 24px;
-    }
-
-    /* ─── STATE PILLS ──────────────────────────────────────────── */
-    .state-selector { margin-bottom: 28px; }
-
-    .state-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      font-weight: 500;
-      margin-bottom: 10px;
-    }
-
-    .state-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .state-pill {
-      padding: 6px 16px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      user-select: none;
-    }
-
-    .state-pill.selected {
-      background: var(--text);
-      color: var(--surface);
-      border-color: var(--text);
-    }
-
-    /* ─── VOICE INPUT ──────────────────────────────────────────── */
-    .voice-bar {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 28px;
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-
-    .voice-bar:hover { border-color: var(--text); }
-
-    .wave {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      height: 24px;
-    }
-
-    .wave-bar {
-      width: 3px;
-      background: var(--accent);
-      border-radius: 2px;
-      animation: waveAnim 1.2s ease-in-out infinite;
-    }
-
-    .wave-bar:nth-child(1) { animation-delay: 0s;    height: 8px; }
-    .wave-bar:nth-child(2) { animation-delay: 0.15s; height: 14px; }
-    .wave-bar:nth-child(3) { animation-delay: 0.3s;  height: 20px; }
-    .wave-bar:nth-child(4) { animation-delay: 0.45s; height: 14px; }
-    .wave-bar:nth-child(5) { animation-delay: 0.6s;  height: 8px; }
-
-    @keyframes waveAnim {
-      0%, 100% { transform: scaleY(0.6); opacity: 0.6; }
-      50%       { transform: scaleY(1.0); opacity: 1; }
-    }
-
-    .voice-text {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    /* ─── DIFF VIEW ────────────────────────────────────────────── */
-    .diff-view {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .diff-panel { padding: 20px 22px; }
-
-    .diff-panel-before {
-      background: #fff5f5;
-      border: 1px solid #ffd5d5;
-    }
-
-    .diff-panel-after {
-      background: #f5fff5;
-      border: 1px solid #c3e6c3;
-    }
-
-    .diff-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .diff-label-before { color: #c0392b; }
-    .diff-label-after  { color: #27ae60; }
-
-    .diff-text { font-size: 13px; line-height: 1.7; }
-
-    .diff-text-before {
-      color: #a93226;
-      text-decoration: line-through;
-    }
-
-    .diff-text-after { color: #1e8449; }
-
-    /* ─── TOOLBAR ──────────────────────────────────────────────── */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 36px;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: var(--font-display);
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .btn-outline:hover { border-color: var(--text); background: var(--bg); }
-
-    .btn-outline-red {
-      background: transparent;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      font-family: var(--font-display);
-      font-size: 16px;
-      letter-spacing: 0.08em;
-      padding: 12px 24px;
-      cursor: pointer;
-      transition: background 0.15s;
-      flex: 1;
-    }
-
-    .btn-outline-red:hover { background: var(--accent-bg); }
-
-    .btn-primary {
-      background: var(--text);
-      color: var(--surface);
-      border: none;
-      font-family: var(--font-display);
-      font-size: 16px;
-      letter-spacing: 0.08em;
-      padding: 12px 28px;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-
-    .btn-primary:hover { opacity: 0.85; }
-
-    .btn-primary-full {
-      background: var(--text);
-      color: var(--surface);
-      border: none;
-      font-family: var(--font-display);
-      font-size: 20px;
-      letter-spacing: 0.08em;
-      padding: 18px 32px;
-      width: 100%;
-      cursor: pointer;
-      transition: opacity 0.15s;
-      margin-top: 28px;
-      display: block;
-    }
-
-    .btn-primary-full:hover { opacity: 0.85; }
-
-    .btn-action-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    /* ─── APPROVAL CARD ────────────────────────────────────────── */
-    .approval-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 28px;
-      margin-bottom: 24px;
-    }
-
-    .approval-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .approval-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
-    }
-
-    .approval-name {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .approval-role {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .approval-pill-wrap { margin-left: auto; }
-
-    /* ─── OUTPUT CARDS ─────────────────────────────────────────── */
-    .output-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .output-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 28px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      user-select: none;
-    }
-
-    .output-card:hover { border-color: var(--text); }
-
-    .output-card.selected {
-      background: var(--text);
-      border-color: var(--text);
-    }
-
-    .output-icon {
-      font-family: var(--font-display);
-      font-size: 40px;
-      letter-spacing: 0.02em;
-      color: var(--text);
-      line-height: 1;
-      margin-bottom: 12px;
-      transition: color 0.15s;
-    }
-
-    .output-card.selected .output-icon { color: var(--surface); }
-
-    .output-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-      transition: color 0.15s;
-    }
-
-    .output-card.selected .output-name { color: var(--surface); }
-
-    .output-desc {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.5;
-      transition: color 0.15s;
-    }
-
-    .output-card.selected .output-desc { color: rgba(255,255,255,0.6); }
-
-    /* ─── VERSION LOG ──────────────────────────────────────────── */
-    .version-list {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      margin-bottom: 28px;
-    }
-
-    .version-row {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .version-row:last-child { border-bottom: none; }
-
-    .version-tag {
-      font-family: var(--font-display);
-      font-size: 22px;
-      color: var(--accent);
-      letter-spacing: 0.04em;
-      width: 52px;
-      flex-shrink: 0;
-    }
-
-    .version-info { flex: 1; }
-
-    .version-desc {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .version-meta {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* ─── DIVIDER ──────────────────────────────────────────────── */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 28px 0;
-    }
-
-    /* ─── LOADING STATE ────────────────────────────────────────── */
-    .btn-primary.loading,
-    .btn-primary-full.loading {
-      opacity: 0.7;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    /* ─── PLACEHOLDER NOTICE ───────────────────────────────────── */
-    .notice {
-      font-size: 12px;
-      color: var(--muted);
-      padding: 10px 0;
-    }
-
-    /* ─── SECTION HEADER ROW ───────────────────────────────────── */
-    .section-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .section-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      letter-spacing: 0.04em;
-    }
-
-    /* ─── UPLOAD AREA ──────────────────────────────────────────── */
-    .upload-area {
-      border: 1px dashed var(--border);
-      background: var(--surface);
-      padding: 32px;
-      text-align: center;
-      margin-bottom: 24px;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .upload-area:hover {
-      border-color: var(--text);
-      background: var(--bg);
-    }
-
-    .upload-area input { display: none; }
-
-    .upload-label {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .upload-label strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    /* ─── SCROLLBAR ────────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
+    /* ─── SCROLLBAR ──────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #c0c0c0; }
-
-    /* ─── TOAST ────────────────────────────────────────────────── */
-    .toast {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      background: var(--text);
-      color: var(--surface);
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 600;
-      padding: 12px 20px;
-      z-index: 9999;
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ─── API STATUS ───────────────────────────────────────────── */
-    .api-status {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      font-weight: 600;
-      transition: color 0.3s;
-    }
-
+    ::-webkit-scrollbar-thumb:hover { background: #c8c8c8; }
   </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- ── NAVBAR ─────────────────────────────────────────────────── -->
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <span class="navbar-logo">CANON</span>
-      <span class="navbar-sub">Policy OS</span>
+  <!-- ── TOPBAR ──────────────────────────────────────────── -->
+  <header id="topbar">
+    <div class="topbar-brand">
+      <span class="topbar-logo">CANON</span>
+      <span class="topbar-sub">Policy OS</span>
     </div>
-    <div class="navbar-right">
-      <span class="api-status" id="apiStatus">● Checking...</span>
-      <div class="role-badge">HR Manager</div>
-      <div class="avatar">S</div>
+    <div class="topbar-right">
+      <span id="api-status">● CHECKING...</span>
+      <span class="topbar-badge">HR Manager</span>
+      <div class="topbar-avatar">SR</div>
     </div>
+  </header>
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <nav id="sidebar">
+
+    <div class="nav-section">
+      <div class="nav-section-label">Workspace</div>
+      <div class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard')">
+        <div class="nav-item-left">
+          <span class="nav-dot"></span>
+          Dashboard
+        </div>
+      </div>
+      <div class="nav-item" data-screen="documents" onclick="showScreen('documents')">
+        <div class="nav-item-left">
+          <span class="nav-dot"></span>
+          Documents
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Policies</div>
+      <div class="nav-item" data-screen="open-policies" onclick="showScreen('open-policies')">
+        <div class="nav-item-left">
+          <span class="nav-dot"></span>
+          Open Policies
+        </div>
+        <span class="nav-badge">2</span>
+      </div>
+      <div class="nav-item" data-screen="approvals" onclick="showScreen('approvals')">
+        <div class="nav-item-left">
+          <span class="nav-dot"></span>
+          Approvals
+        </div>
+        <span class="nav-badge">2</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Publish</div>
+      <div class="nav-item" data-screen="generate" onclick="showScreen('generate')">
+        <div class="nav-item-left">
+          <span class="nav-dot"></span>
+          Generate
+        </div>
+      </div>
+      <div class="nav-item" data-screen="version-log" onclick="showScreen('version-log')">
+        <div class="nav-item-left">
+          <span class="nav-dot"></span>
+          Version Log
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="topbar-avatar" style="width:30px;height:30px;font-size:10px;">SR</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Sara R.</div>
+        <div class="sidebar-user-role">HR Manager</div>
+      </div>
+    </div>
+
   </nav>
 
-  <!-- ── SIDEBAR ────────────────────────────────────────────────── -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Workspace</div>
-      <div class="nav-item active" data-screen="dashboard">Dashboard</div>
-      <div class="nav-item" data-screen="documents">Documents</div>
-      <div class="nav-item" data-screen="generate">Generate</div>
+  <!-- ── MAIN ────────────────────────────────────────────── -->
+  <main id="main">
+    <div id="main-content">
+      <p>Screens go here</p>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Review</div>
-      <div class="nav-item" data-screen="approvals">
-        Approvals
-        <span class="nav-badge">4</span>
-      </div>
-      <div class="nav-item" data-screen="version-log">Version Log</div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Tools</div>
-      <div class="nav-item" data-screen="edit">Policy Editor</div>
-    </div>
-    <div class="sidebar-bottom">
-      <div class="sidebar-user">
-        <div class="avatar" style="width:32px;height:32px;font-size:10px;">S</div>
-        <div class="sidebar-user-info">
-          <div class="sidebar-user-name">Sara Chen</div>
-          <div class="sidebar-user-role">HR Manager</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ── MAIN ───────────────────────────────────────────────────── -->
-  <main class="main">
-
-    <!-- ────────────────────────────────────────────────────────── -->
-    <!-- SCREEN 1: DASHBOARD                                        -->
-    <!-- ────────────────────────────────────────────────────────── -->
-    <section class="screen active" id="screen-dashboard">
-      <div class="section-label">(CANON — 01) · 2026</div>
-      <h1 class="screen-heading">GOOD MORNING, SARA.</h1>
-
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Docs</div>
-          <div class="stat-value default">147</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Up to Date</div>
-          <div class="stat-value default">131</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Pending Review</div>
-          <div class="stat-value muted">12</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Needs Approval</div>
-          <div class="stat-value accent">4</div>
-        </div>
-      </div>
-
-      <div class="ai-flag">
-        <div class="ai-flag-label">CANON AI</div>
-        <div class="ai-flag-text">
-          Remote Work Policy references federal baseline only. Employees in CA, NY, and OR may have additional state rights not covered. Recommend immediate review.
-        </div>
-      </div>
-
-      <div class="section-header-row">
-        <div class="section-title">RECENT DOCUMENTS</div>
-      </div>
-
-      <div class="doc-list">
-        <div class="doc-row" onclick="switchScreen('edit')">
-          <div class="doc-abbr">RW</div>
-          <div class="doc-info">
-            <div class="doc-name">Remote Work Policy</div>
-            <div class="doc-meta">v2.1 · HR Department · Updated Mar 12, 2026</div>
-          </div>
-          <span class="pill pill-review">In Review</span>
-        </div>
-        <div class="doc-row">
-          <div class="doc-abbr">CE</div>
-          <div class="doc-info">
-            <div class="doc-name">Code of Ethics</div>
-            <div class="doc-meta">v3.0 · Legal & HR · Updated Feb 28, 2026</div>
-          </div>
-          <span class="pill pill-current">Current</span>
-        </div>
-        <div class="doc-row">
-          <div class="doc-abbr">BT</div>
-          <div class="doc-info">
-            <div class="doc-name">Business Travel Policy</div>
-            <div class="doc-meta">v1.4 · Finance · Updated Jan 15, 2026</div>
-          </div>
-          <span class="pill pill-draft">Draft</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ────────────────────────────────────────────────────────── -->
-    <!-- SCREEN 2: DOCUMENTS                                        -->
-    <!-- ────────────────────────────────────────────────────────── -->
-    <section class="screen" id="screen-documents">
-      <div class="section-label">(CANON — 02) · 2026</div>
-      <h1 class="screen-heading">DOCUMENTS</h1>
-
-      <div style="display:flex;gap:12px;margin-bottom:20px;">
-        <input class="search-bar" style="margin-bottom:0;flex:1;" type="text" placeholder="Search policies, departments, or topics…" />
-        <label class="upload-area" style="padding:13px 20px;margin-bottom:0;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;">
-          <input type="file" id="uploadInput" accept=".pdf,.docx,.txt" onchange="handleUpload(event)" />
-          <span class="upload-label upload-trigger"><strong>↑ Upload Document</strong></span>
-        </label>
-      </div>
-
-      <div class="ai-flag" style="margin-bottom:24px;">
-        <div class="ai-flag-label">CANON AI · SUGGESTION</div>
-        <div class="ai-flag-text">
-          3 policies are approaching 12-month review cycles. CA SB-553 workplace violence prevention requirements may affect your Safety Policy — review recommended before May 1.
-        </div>
-      </div>
-
-      <div class="doc-list" id="docList">
-        <div class="doc-row" onclick="switchScreen('edit')">
-          <div class="doc-abbr">RW</div>
-          <div class="doc-info">
-            <div class="doc-name">Remote Work Policy</div>
-            <div class="doc-meta">v2.1 · HR Department · Flagged for compliance review</div>
-          </div>
-          <span class="pill pill-review">In Review</span>
-        </div>
-        <div class="doc-row">
-          <div class="doc-abbr">CE</div>
-          <div class="doc-info">
-            <div class="doc-name">Code of Ethics</div>
-            <div class="doc-meta">v3.0 · Legal & HR · Last reviewed Feb 28, 2026</div>
-          </div>
-          <span class="pill pill-current">Current</span>
-        </div>
-        <div class="doc-row">
-          <div class="doc-abbr">AH</div>
-          <div class="doc-info">
-            <div class="doc-name">Anti-Harassment Policy</div>
-            <div class="doc-meta">v2.2 · HR Department · Compliant</div>
-          </div>
-          <span class="pill pill-current">Current</span>
-        </div>
-        <div class="doc-row">
-          <div class="doc-abbr">BT</div>
-          <div class="doc-info">
-            <div class="doc-name">Business Travel Policy</div>
-            <div class="doc-meta">v1.4 · Finance · In draft stage</div>
-          </div>
-          <span class="pill pill-draft">Draft</span>
-        </div>
-        <div class="doc-row">
-          <div class="doc-abbr">SP</div>
-          <div class="doc-info">
-            <div class="doc-name">Safety & Security Policy</div>
-            <div class="doc-meta">v1.1 · Facilities · Due for review</div>
-          </div>
-          <span class="pill pill-review">In Review</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ────────────────────────────────────────────────────────── -->
-    <!-- SCREEN 3: EDIT & REVIEW                                    -->
-    <!-- ────────────────────────────────────────────────────────── -->
-    <section class="screen" id="screen-edit">
-      <div class="section-label">(CANON — 03) · 2026</div>
-      <h1 class="screen-heading-sm">REMOTE WORK POLICY</h1>
-      <p class="screen-sub">v2.1 · HR Department · Flagged for compliance review</p>
-
-      <!-- Stepper -->
-      <div class="stepper">
-        <div class="step">
-          <div class="step-dot done">✓</div>
-          <span class="step-label done">Review</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot active">2</div>
-          <span class="step-label active">Edit</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot future">3</div>
-          <span class="step-label future">Approve</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot future">4</div>
-          <span class="step-label future">Publish</span>
-        </div>
-      </div>
-
-      <!-- AI Flag -->
-      <div class="ai-flag" style="margin-bottom:24px;">
-        <div class="ai-flag-label">CANON AI · 3 ISSUES FOUND</div>
-        <div class="ai-flag-text" id="editAiText">
-          California requires expense reimbursement for all remote work costs. Your current policy does not address this. Additionally, New York requires 72-hour advance notice for schedule changes. Oregon mandates predictive scheduling provisions for remote teams over 10 employees.
-        </div>
-        <div style="margin-top:12px;">
-          <button class="btn-outline" id="analyzeBtn" style="font-size:12px;padding:7px 14px;" onclick="runAnalyze(['CA','NY','OR'], 'Remote Work Policy')">ANALYZE WITH AI</button>
-        </div>
-      </div>
-
-      <!-- State Selector -->
-      <div class="state-selector">
-        <div class="state-label">Employee States</div>
-        <div class="state-pills" id="statePills">
-          <div class="state-pill selected" onclick="toggleState(this)">CA</div>
-          <div class="state-pill selected" onclick="toggleState(this)">NY</div>
-          <div class="state-pill" onclick="toggleState(this)">TX</div>
-          <div class="state-pill selected" onclick="toggleState(this)">OR</div>
-          <div class="state-pill" onclick="toggleState(this)">FL</div>
-          <div class="state-pill" onclick="toggleState(this)">IL</div>
-        </div>
-      </div>
-
-      <!-- Voice Bar -->
-      <div class="voice-bar">
-        <div class="wave">
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-          <div class="wave-bar"></div>
-        </div>
-        <span class="voice-text">VOICE MODE — Speak your edit, Canon formats it</span>
-      </div>
-
-      <!-- Diff View -->
-      <div class="diff-view">
-        <div class="diff-panel diff-panel-before">
-          <div class="diff-label diff-label-before">BEFORE</div>
-          <p class="diff-text diff-text-before">
-            Employees working remotely are responsible for maintaining their own workspace equipment and internet connectivity. The company does not provide reimbursement for home office expenses unless pre-approved by management.
-          </p>
-        </div>
-        <div class="diff-panel diff-panel-after">
-          <div class="diff-label diff-label-after">AFTER</div>
-          <p class="diff-text diff-text-after">
-            Employees working remotely are responsible for maintaining their own workspace. The company will reimburse all reasonable and necessary remote work expenses as required by applicable state law, including but not limited to internet, phone, and equipment costs for employees in CA, NY, OR, and other applicable states.
-          </p>
-        </div>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="toolbar">
-        <button class="btn-outline">Undo</button>
-        <button class="btn-outline">Diff View</button>
-        <button class="btn-outline" onclick="runAnalyze()">AI Rephrase</button>
-        <div style="flex:1;"></div>
-        <button class="btn-primary" id="sendApprovalBtn" onclick="handleSendApproval()">SEND FOR APPROVAL →</button>
-      </div>
-    </section>
-
-    <!-- ────────────────────────────────────────────────────────── -->
-    <!-- SCREEN 4: APPROVALS                                        -->
-    <!-- ────────────────────────────────────────────────────────── -->
-    <section class="screen" id="screen-approvals">
-      <div class="section-label">(CANON — 04) · 2026</div>
-      <h1 class="screen-heading">PENDING APPROVALS</h1>
-
-      <!-- Stepper -->
-      <div class="stepper">
-        <div class="step">
-          <div class="step-dot done">✓</div>
-          <span class="step-label done">Review</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot done">✓</div>
-          <span class="step-label done">Edit</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot active">3</div>
-          <span class="step-label active">Approve</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot future">4</div>
-          <span class="step-label future">Publish</span>
-        </div>
-      </div>
-
-      <!-- Approval Card -->
-      <div class="approval-card">
-        <div class="approval-header">
-          <div class="approval-avatar">MK</div>
-          <div>
-            <div class="approval-name">Michael K.</div>
-            <div class="approval-role">Legal Counsel</div>
-          </div>
-          <div class="approval-pill-wrap">
-            <span class="pill pill-pending">Pending</span>
-          </div>
-        </div>
-
-        <div class="ai-flag" style="margin-bottom:0;">
-          <div class="ai-flag-label">CANON AI · SUMMARY</div>
-          <div class="ai-flag-text" id="approvalAiText">
-            Remote work expense reimbursement clause added for CA, NY, IL. Predictive scheduling language updated for OR (10+ remote employees). Estimated review time: under 10 minutes.
-          </div>
-        </div>
-
-        <div class="btn-action-row">
-          <button class="btn-outline-red">REDLINE &amp; RETURN</button>
-          <button class="btn-primary" id="approveBtn" style="flex:1;" onclick="handleApprove()">APPROVE &amp; PUBLISH →</button>
-        </div>
-      </div>
-
-      <div class="approval-card" style="opacity:0.45;">
-        <div class="approval-header">
-          <div class="approval-avatar">JT</div>
-          <div>
-            <div class="approval-name">Jordan T.</div>
-            <div class="approval-role">VP of People</div>
-          </div>
-          <div class="approval-pill-wrap">
-            <span class="pill pill-pending">Waiting</span>
-          </div>
-        </div>
-        <div style="font-size:12px;color:var(--muted);">Approval pending Michael K. sign-off.</div>
-      </div>
-    </section>
-
-    <!-- ────────────────────────────────────────────────────────── -->
-    <!-- SCREEN 5: GENERATE                                         -->
-    <!-- ────────────────────────────────────────────────────────── -->
-    <section class="screen" id="screen-generate">
-      <div class="section-label">(CANON — 05) · 2026</div>
-      <h1 class="screen-heading">GENERATE OUTPUTS</h1>
-
-      <!-- Stepper -->
-      <div class="stepper">
-        <div class="step">
-          <div class="step-dot done">✓</div>
-          <span class="step-label done">Review</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot done">✓</div>
-          <span class="step-label done">Edit</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot done">✓</div>
-          <span class="step-label done">Approve</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-          <div class="step-dot active">4</div>
-          <span class="step-label active">Publish</span>
-        </div>
-      </div>
-
-      <!-- AI Recommendation -->
-      <div class="ai-flag" style="margin-bottom:28px;">
-        <div class="ai-flag-label">CANON AI · RECOMMENDATION</div>
-        <div class="ai-flag-text" id="generateAiText">
-          This update affects 3 states and 214 employees. Canon recommends: Slack post for immediate visibility + HTML announcement for intranet + manager email for team leads to cascade communication.
-        </div>
-      </div>
-
-      <!-- Output Cards -->
-      <div class="output-grid" id="outputGrid">
-        <div class="output-card selected" onclick="toggleOutput(this)">
-          <div class="output-icon">PDF</div>
-          <div class="output-name">Branded PDF</div>
-          <div class="output-desc">Print-ready document with company formatting, headers, and legal footer.</div>
-        </div>
-        <div class="output-card selected" onclick="toggleOutput(this)">
-          <div class="output-icon">HTML</div>
-          <div class="output-name">HTML Page</div>
-          <div class="output-desc">Embeddable intranet page with anchor links and responsive layout.</div>
-        </div>
-        <div class="output-card selected" onclick="toggleOutput(this)">
-          <div class="output-icon">SLK</div>
-          <div class="output-name">Slack Post</div>
-          <div class="output-desc">Formatted Slack message with key changes highlighted for #hr-announcements.</div>
-        </div>
-        <div class="output-card" onclick="toggleOutput(this)">
-          <div class="output-icon">EML</div>
-          <div class="output-name">Email Draft</div>
-          <div class="output-desc">Manager-ready email template with personalization fields and state-specific clauses.</div>
-        </div>
-      </div>
-
-      <button class="btn-primary-full" id="generateBtn" onclick="handleGenerate()">GENERATE &amp; PUBLISH ALL →</button>
-    </section>
-
-    <!-- ────────────────────────────────────────────────────────── -->
-    <!-- SCREEN 6: VERSION LOG                                      -->
-    <!-- ────────────────────────────────────────────────────────── -->
-    <section class="screen" id="screen-version-log">
-      <div class="section-label">(CANON — 06) · 2026</div>
-      <h1 class="screen-heading">VERSION LOG</h1>
-
-      <div style="margin-bottom:8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.15em;font-weight:500;">Remote Work Policy · All Versions</div>
-
-      <div class="version-list">
-        <div class="version-row">
-          <div class="version-tag">v2.2</div>
-          <div class="version-info">
-            <div class="version-desc">State expense reimbursement + OR scheduling update</div>
-            <div class="version-meta">Sara Chen · Apr 18, 2026 · Legal approved</div>
-          </div>
-          <span class="pill pill-current">Current</span>
-        </div>
-        <div class="version-row">
-          <div class="version-tag" style="color:var(--muted);">v2.1</div>
-          <div class="version-info">
-            <div class="version-desc">Remote work eligibility criteria expanded</div>
-            <div class="version-meta">Sara Chen · Mar 12, 2026</div>
-          </div>
-          <span class="pill pill-archived">Archived</span>
-        </div>
-        <div class="version-row">
-          <div class="version-tag" style="color:var(--muted);">v2.0</div>
-          <div class="version-info">
-            <div class="version-desc">Full rewrite post-pandemic work model shift</div>
-            <div class="version-meta">Dana Reyes · Sep 4, 2025</div>
-          </div>
-          <span class="pill pill-archived">Archived</span>
-        </div>
-        <div class="version-row">
-          <div class="version-tag" style="color:var(--muted);">v1.0</div>
-          <div class="version-info">
-            <div class="version-desc">Initial policy — federal baseline only</div>
-            <div class="version-meta">HR Department · Jan 10, 2024</div>
-          </div>
-          <span class="pill pill-archived">Archived</span>
-        </div>
-      </div>
-
-      <div class="ai-flag">
-        <div class="ai-flag-label">CANON AI · COMPLETE</div>
-        <div class="ai-flag-text">
-          All outputs published. 4 formats generated in company voice and distributed across configured channels. Policy v2.2 is now live and compliant across CA, NY, and OR. Next recommended review: Q1 2027.
-        </div>
-      </div>
-
-      <div style="display:flex;gap:12px;">
-        <button class="btn-outline" onclick="switchScreen('documents')">← BACK TO DOCUMENTS</button>
-        <button class="btn-outline" onclick="switchScreen('dashboard')">DASHBOARD</button>
-      </div>
-    </section>
-
   </main>
-</div>
 
-<!-- ── TOAST ───────────────────────────────────────────────────── -->
-<div class="toast" id="toast"></div>
-
-<script>
-  // ── NAVIGATION ─────────────────────────────────────────────────
-  const navItems = document.querySelectorAll('.nav-item[data-screen]');
-  const screens  = document.querySelectorAll('.screen');
-
-  function switchScreen(id) {
-    screens.forEach(s => s.classList.remove('active'));
-    const target = document.getElementById('screen-' + id);
-    if (target) target.classList.add('active');
-    navItems.forEach(n => n.classList.toggle('active', n.dataset.screen === id));
-  }
-
-  navItems.forEach(item => {
-    item.addEventListener('click', () => switchScreen(item.dataset.screen));
-  });
-
-  // ── STATE PILLS ─────────────────────────────────────────────────
-  function toggleState(el) { el.classList.toggle('selected'); }
-
-  // ── OUTPUT CARDS ────────────────────────────────────────────────
-  function toggleOutput(el) { el.classList.toggle('selected'); }
-
-  // ── TOAST ───────────────────────────────────────────────────────
-  function showToast(msg, duration = 2800) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), duration);
-  }
-
-  // ── LOADING STATE ────────────────────────────────────────────────
-  function setLoading(btn, isLoading, label) {
-    if (isLoading) {
-      btn.dataset.origLabel = btn.dataset.origLabel || btn.textContent;
-      btn.textContent = 'PROCESSING...';
-      btn.classList.add('loading');
-    } else {
-      btn.textContent = label || btn.dataset.origLabel || btn.textContent;
-      btn.classList.remove('loading');
-    }
-  }
-
-  // ── UTIL ─────────────────────────────────────────────────────────
-  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-  // ── API BASE ─────────────────────────────────────────────────────
-  const API_BASE = 'https://emergehackathon.onrender.com';
-
-  // ── API STATUS CHECK ─────────────────────────────────────────────
-  async function checkAPI() {
-    const el = document.getElementById('apiStatus');
-    try {
-      const res = await fetch(API_BASE + '/', { signal: AbortSignal.timeout(4000) });
-      const data = await res.json();
-      if (data.status === 'ok' || res.ok) {
-        el.textContent = '● LIVE';
-        el.style.color = '#27ae60';
-      } else {
-        throw new Error('not ok');
-      }
-    } catch (e) {
-      console.warn('API offline, using mock mode:', e);
-      el.textContent = '● OFFLINE · MOCK MODE';
-      el.style.color = '#E8221A';
-    }
-  }
-
-  checkAPI();
-
-  // ── UPLOAD ──────────────────────────────────────────────────────
-  async function handleUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // Find upload button and set loading state
-    const uploadBtn = document.querySelector('.upload-trigger');
-    if (uploadBtn) {
-      uploadBtn.textContent = 'UPLOADING...';
-      uploadBtn.style.opacity = '0.6';
-      uploadBtn.style.pointerEvents = 'none';
-    }
-
-    showToast('Uploading ' + file.name + '…');
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    let filename = file.name;
-    try {
-      const res = await fetch(API_BASE + '/upload', {
-        method: 'POST',
-        body: formData
+  <script>
+    // ── SCREEN SWITCHING ──────────────────────────────────
+    function showScreen(id) {
+      console.log('showScreen:', id);
+      document.querySelectorAll('.nav-item[data-screen]').forEach(item => {
+        item.classList.toggle('active', item.dataset.screen === id);
       });
-      if (res.ok) {
-        const data = await res.json();
-        filename = data.filename || file.name;
-        showToast('Uploaded: ' + filename);
-      } else {
-        throw new Error('Upload failed: ' + res.status);
-      }
-    } catch (e) {
-      console.error('Upload error:', e);
-      showToast('Uploaded (mock): ' + filename);
     }
 
-    // Add the doc to the documents list
-    addDocToList(filename);
-
-    if (uploadBtn) {
-      uploadBtn.textContent = '↑ Upload Document';
-      uploadBtn.style.opacity = '';
-      uploadBtn.style.pointerEvents = '';
-    }
-    event.target.value = '';
-  }
-
-  function addDocToList(filename) {
-    const list = document.getElementById('docList');
-    if (!list) return;
-    const abbr = filename.replace(/\.[^/.]+$/, '').slice(0, 2).toUpperCase();
-    const row = document.createElement('div');
-    row.className = 'doc-row';
-    row.innerHTML = `
-      <div class="doc-abbr">${abbr}</div>
-      <div class="doc-info">
-        <div class="doc-name">${filename}</div>
-        <div class="doc-meta">Just uploaded · Processing...</div>
-      </div>
-      <span class="pill pill-draft">New</span>
-    `;
-    list.prepend(row);
-  }
-
-  // ── ANALYZE ──────────────────────────────────────────────────────
-  // Called when clicking "Update Policy →" on a regulation card
-  async function runAnalyze(states, policyName) {
-    states = states || ['CA', 'NY', 'IL'];
-    policyName = policyName || 'Remote Work Policy';
-
-    // Navigate to edit screen
-    switchScreen('edit');
-
-    const btn = document.getElementById('analyzeBtn');
-    const textEl = document.getElementById('editAiText');
-
-    if (btn) {
-      btn.textContent = 'ANALYZING...';
-      btn.classList.add('loading');
-    }
-    if (textEl) textEl.textContent = 'Canon is analyzing your policy against the latest regulations...';
-
-    const policyText = `Section 4 — Equipment & Resources\n\nThe company will provide employees with necessary hardware for remote work including laptop and monitor where applicable. Employees are responsible for maintaining their own internet connectivity and home office setup. No expense reimbursement is provided for remote work costs unless pre-approved by management.`;
-
-    try {
-      const res = await fetch(API_BASE + '/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          policy_text: policyText,
-          states: states,
-          company_name: 'Acme Corp'
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const flagText = data.issues || data.analysis || data.message || data.flags;
-        if (flagText && textEl) {
-          textEl.textContent = typeof flagText === 'string' ? flagText : JSON.stringify(flagText);
+    // ── API STATUS ────────────────────────────────────────
+    (async function checkAPI() {
+      const el = document.getElementById('api-status');
+      try {
+        const res = await fetch('https://emergehackathon.onrender.com/', {
+          signal: AbortSignal.timeout(5000)
+        });
+        if (res.ok) {
+          el.textContent = '● LIVE';
+          el.style.color = '#27ae60';
+        } else {
+          throw new Error();
         }
-        showToast('Analysis complete');
-      } else {
-        throw new Error('Analyze failed: ' + res.status);
+      } catch {
+        el.textContent = '● OFFLINE';
+        el.style.color = '#E8221A';
       }
-    } catch (e) {
-      console.error('Analyze error:', e);
-      // Mock fallback
-      await delay(900);
-      const stateTxt = states.join(', ');
-      if (textEl) {
-        textEl.textContent = `Analysis complete for ${stateTxt}. California requires expense reimbursement for all remote work costs (Labor Code §2802). New York requires 72-hour advance notice for schedule changes. Illinois has similar provisions effective Jan 1, 2026. 3 clauses need immediate update — Canon has pre-drafted language below.`;
-      }
-      showToast('Analysis complete — 3 issues found');
-    }
+    })();
+  </script>
 
-    if (btn) {
-      btn.textContent = 'RE-ANALYZE';
-      btn.classList.remove('loading');
-    }
-  }
-
-  // ── SEND FOR APPROVAL ────────────────────────────────────────────
-  async function handleSendApproval() {
-    const btn = document.getElementById('sendApprovalBtn');
-    setLoading(btn, true);
-    await delay(900);
-    try {
-      await fetch(API_BASE + '/submit-for-approval', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ document: 'Remote Work Policy v2.1' })
-      });
-    } catch (e) { console.warn('submit-for-approval offline:', e); }
-    setLoading(btn, false, 'SEND FOR APPROVAL →');
-    showToast('Sent for approval');
-    await delay(300);
-    switchScreen('approvals');
-  }
-
-  // ── APPROVE & PUBLISH ────────────────────────────────────────────
-  async function handleApprove() {
-    const btn = document.getElementById('approveBtn');
-    setLoading(btn, true, 'APPROVE & PUBLISH →');
-    await delay(1000);
-    try {
-      const res = await fetch(API_BASE + '/approve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ document: 'Remote Work Policy v2.1' })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const textEl = document.getElementById('approvalAiText');
-        if (data.message && textEl) textEl.textContent = data.message;
-      }
-    } catch (e) { console.warn('approve offline:', e); }
-    setLoading(btn, false, 'APPROVE & PUBLISH →');
-    showToast('Approved — moving to generate');
-    await delay(300);
-    switchScreen('generate');
-  }
-
-  // ── GENERATE & PUBLISH ───────────────────────────────────────────
-  async function handleGenerate() {
-    const btn = document.getElementById('generateBtn');
-    const selected = [...document.querySelectorAll('#outputGrid .output-card.selected')]
-      .map(c => c.querySelector('.output-name').textContent.trim());
-
-    if (selected.length === 0) {
-      showToast('Select at least one output format');
-      return;
-    }
-
-    setLoading(btn, true, 'GENERATE & PUBLISH ALL →');
-
-    const policyText = `Remote Work Policy v2.2 — Acme Corp\n\nSection 4 — Equipment & Resources\n\nThe company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.\n\nSection 4A — Expense Reimbursement (NEW)\n\nEmployees in CA, NY, or IL are entitled to reimbursement for reasonable and necessary remote work expenses including internet, phone, and supplies. Submit monthly via HR portal within 30 days of expense incurrence.`;
-
-    let previewHTML = null;
-    try {
-      const res = await fetch(API_BASE + '/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          policy_text: policyText,
-          company_name: 'Acme Corp',
-          states: ['CA', 'NY', 'IL'],
-          change_summary: 'Added expense reimbursement clause for CA, NY, IL remote workers'
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const genTextEl = document.getElementById('generateAiText');
-        if (data.message && genTextEl) genTextEl.textContent = data.message;
-        if (data.html || data.output || data.content) {
-          previewHTML = data.html || data.output || data.content;
-        }
-      } else {
-        throw new Error('Generate failed: ' + res.status);
-      }
-    } catch (e) {
-      console.error('Generate error:', e);
-      await delay(1400);
-    }
-
-    setLoading(btn, false, 'GENERATE & PUBLISH ALL →');
-
-    // Show preview panel if we got HTML back
-    if (previewHTML) {
-      showGeneratePreview(previewHTML);
-    }
-
-    showToast(selected.length + ' format' + (selected.length > 1 ? 's' : '') + ' published');
-    await delay(400);
-    switchScreen('version-log');
-  }
-
-  function showGeneratePreview(html) {
-    let panel = document.getElementById('generatePreview');
-    if (!panel) {
-      panel = document.createElement('div');
-      panel.id = 'generatePreview';
-      panel.style.cssText = 'background:#fff;border:1px solid #e0e0e0;padding:24px;margin-bottom:20px;font-size:13px;line-height:1.7;max-height:320px;overflow-y:auto;';
-      const btn = document.getElementById('generateBtn');
-      btn.parentNode.insertBefore(panel, btn);
-    }
-    panel.innerHTML = html;
-  }
-</script>
 </body>
 </html>
