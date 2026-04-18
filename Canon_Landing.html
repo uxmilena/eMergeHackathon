@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CANON — Policy OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8221A;
+    --black: #080808;
+    --white: #F5F5F5;
+    --bebas: 'Bebas Neue', sans-serif;
+    --dm: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100vh;
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--dm);
+    overflow: hidden;
+  }
+
+  /* ── NOISE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+  }
+
+  /* ── GRID ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 72px 72px;
+    pointer-events: none;
+  }
+
+  /* ── RED GLOW ── */
+  .glow {
+    position: fixed; z-index: 0;
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,34,26,0.10) 0%, transparent 65%);
+    top: -200px; left: -150px;
+    pointer-events: none;
+    animation: glowDrift 10s ease-in-out infinite alternate;
+  }
+  @keyframes glowDrift {
+    from { transform: translate(0,0); }
+    to   { transform: translate(80px, 50px); }
+  }
+
+  /* ── SCAN LINE ── */
+  .scanline {
+    position: fixed; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,34,26,0.12), transparent);
+    z-index: 2; pointer-events: none;
+    animation: scan 7s linear infinite;
+  }
+  @keyframes scan { from { top: 0; } to { top: 100vh; } }
+
+  /* ── CORNER MARKS ── */
+  .corner {
+    position: fixed; width: 18px; height: 18px;
+    z-index: 1; pointer-events: none;
+    opacity: 0.2;
+  }
+  .corner.tl { top: 20px; left: 20px; border-top: 1px solid var(--red); border-left: 1px solid var(--red); }
+  .corner.tr { top: 20px; right: 20px; border-top: 1px solid var(--red); border-right: 1px solid var(--red); }
+  .corner.bl { bottom: 20px; left: 20px; border-bottom: 1px solid var(--red); border-left: 1px solid var(--red); }
+  .corner.br { bottom: 20px; right: 20px; border-bottom: 1px solid var(--red); border-right: 1px solid var(--red); }
+
+  /* ── LAYOUT ── */
+  .page {
+    position: relative; z-index: 1;
+    width: 100%; height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* ── LEFT — HERO ── */
+  .left {
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 56px 48px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .logo {
+    font-family: var(--bebas);
+    font-size: 18px; letter-spacing: 0.14em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.5s 0.05s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .logo span { color: var(--red); }
+
+  .hero-copy {
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .eyebrow-line { width: 28px; height: 1px; background: var(--red); }
+  .eyebrow-text {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--red);
+  }
+  .hero-title {
+    font-family: var(--bebas);
+    font-size: clamp(64px, 8.5vw, 120px);
+    line-height: 0.88; letter-spacing: 0.01em;
+    color: var(--white);
+  }
+  .hero-title .red { color: var(--red); }
+  .hero-title .dim { color: rgba(255,255,255,0.18); font-size: 0.55em; display: block; margin-top: 8px; letter-spacing: 0.06em; }
+
+  .hero-desc {
+    margin-top: 28px;
+    font-size: 14px; font-weight: 300;
+    line-height: 1.7; color: rgba(255,255,255,0.38);
+    max-width: 400px;
+    border-left: 2px solid rgba(232,34,26,0.3);
+    padding-left: 16px;
+  }
+  .hero-desc strong { color: rgba(255,255,255,0.65); font-weight: 500; }
+
+  /* stats */
+  .stats {
+    display: flex; gap: 0;
+    border: 1px solid rgba(255,255,255,0.06);
+    opacity: 0;
+    animation: fadeUp 0.6s 0.35s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .stat {
+    flex: 1; padding: 16px 20px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--bebas);
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1; color: var(--white);
+  }
+  .stat-num span { color: var(--red); }
+  .stat-label {
+    font-size: 10px; color: rgba(255,255,255,0.22);
+    letter-spacing: 0.04em; margin-top: 3px; line-height: 1.4;
+  }
+
+  /* ── RIGHT — START PANEL ── */
+  .right {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 40px 64px;
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.5s cubic-bezier(.4,0,.2,1) forwards;
+  }
+
+  /* subtle vertical lines inside right panel */
+  .right::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 48px 100%;
+    pointer-events: none;
+  }
+
+  .start-panel {
+    width: 100%; max-width: 360px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+    position: relative;
+  }
+
+  /* big icon / emblem */
+  .emblem {
+    width: 80px; height: 80px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .emblem::before {
+    content: '';
+    position: absolute; inset: -5px;
+    border: 1px solid rgba(232,34,26,0.15);
+  }
+  .emblem-inner {
+    font-family: var(--bebas);
+    font-size: 28px; letter-spacing: 0.06em;
+    color: var(--red);
+  }
+
+  .start-label {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 10px;
+    align-self: flex-start;
+  }
+
+  .start-title {
+    font-family: var(--bebas);
+    font-size: 40px; letter-spacing: 0.04em;
+    color: var(--white);
+    align-self: flex-start;
+    line-height: 1;
+  }
+
+  .start-sub {
+    font-size: 12px; font-weight: 300;
+    color: rgba(255,255,255,0.3);
+    margin-top: 8px; line-height: 1.6;
+    align-self: flex-start;
+  }
+
+  .divider {
+    width: 100%; height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 28px 0;
+  }
+
+  /* THE BIG START BUTTON */
+  .btn-start {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px;
+    background: var(--red);
+    color: var(--white);
+    text-decoration: none;
+    padding: 22px 32px;
+    font-family: var(--bebas);
+    font-size: 24px; letter-spacing: 0.14em;
+    border: none; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.25s;
+  }
+  .btn-start::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  .btn-start:hover::before { transform: translateX(100%); }
+  .btn-start:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(232,34,26,0.45);
+  }
+  .btn-start:active { transform: translateY(0); }
+  .btn-arrow {
+    font-size: 20px;
+    transition: transform 0.2s;
+  }
+  .btn-start:hover .btn-arrow { transform: translateX(5px); }
+
+  /* secondary deck link */
+  .btn-deck {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px;
+    background: transparent;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    padding: 14px 32px;
+    font-family: var(--bebas);
+    font-size: 16px; letter-spacing: 0.12em;
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-top: 10px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-deck:hover {
+    border-color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* live badge */
+  .live-badge {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 28px;
+  }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #00C864;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,200,100,0.5); }
+    50% { box-shadow: 0 0 0 5px rgba(0,200,100,0); }
+  }
+  .live-text {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(0,200,100,0.7);
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-left {
+    position: fixed; bottom: 36px; left: 56px;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.7s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .team-name {
+    font-family: var(--bebas);
+    font-size: 14px; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.15);
+  }
+  .team-sub {
+    font-size: 10px; color: rgba(255,255,255,0.1);
+    letter-spacing: 0.06em; margin-top: 2px;
+  }
+
+  .bottom-right {
+    position: fixed; bottom: 36px; right: 56px;
+    z-index: 2;
+    text-align: right;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.7s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  .emerge-tag {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.12);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+<div class="scanline"></div>
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<div class="page">
+
+  <!-- ══ LEFT ══ -->
+  <div class="left">
+    <div class="logo">CANON<span>.</span></div>
+
+    <div class="hero-copy">
+      <div class="hero-eyebrow">
+        <div class="eyebrow-line"></div>
+        <div class="eyebrow-text">Policy OS for HR</div>
+      </div>
+      <div class="hero-title">
+        YOUR HANDBOOK<br>IS ILLEGAL<br>
+        <span class="red">IN 3 STATES.</span>
+        <span class="dim">— Canon AI, just now</span>
+      </div>
+      <div class="hero-desc">
+        Companies with remote employees are one regulation change away from a violation. <strong>Canon monitors government data in real time, matches new laws to your policies, and generates compliant updates — automatically.</strong>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num"><span>$</span>8.3B</div>
+        <div class="stat-label">Annual labor<br>violations · US</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">72<span>%</span></div>
+        <div class="stat-label">HR teams with<br>zero automation</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">14<span>hrs</span></div>
+        <div class="stat-label">Wasted monthly<br>on monitoring</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">30<span>sec</span></div>
+        <div class="stat-label">To update a policy<br>with Canon</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT ══ -->
+  <div class="right">
+    <div class="start-panel">
+
+      <div class="emblem">
+        <div class="emblem-inner">C.</div>
+      </div>
+
+      <div class="start-label">Policy Operating System</div>
+      <div class="start-title">READY WHEN<br>YOU ARE.</div>
+      <div class="start-sub">No setup. No manual monitoring. No compliance surprises. Canon runs in the background so your HR team doesn't have to.</div>
+
+      <div class="divider"></div>
+
+      <a href="https://uxmilena.github.io/eMergeHackathon/" class="btn-start">
+        Launch Canon <span class="btn-arrow">→</span>
+      </a>
+
+      <a href="canon-pitch-deck.html" class="btn-deck">
+        View Pitch Deck
+      </a>
+
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <div class="live-text">Live · eMerge Americas 2026</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-left">
+  <div class="team-name">Just the 4 of Us</div>
+  <div class="team-sub">2 people · 8 hours · 1 working product</div>
+</div>
+
+<div class="bottom-right">
+  <div class="emerge-tag">Wildcard Track · Enterprise AI</div>
+</div>
+
+</body>
+</html>
