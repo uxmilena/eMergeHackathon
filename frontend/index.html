@@ -2400,8 +2400,14 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
       const emailBod= data?.email_body           || MOCK_OUTPUTS.email_body;
       const tldr    = data?.tldr                 || MOCK_OUTPUTS.tldr;
 
+      // Wrap fragment in full document if API returned a partial HTML snippet
+      function ensureFullDocument(h) {
+        if (/^\s*<!doctype/i.test(h)) return h;
+        return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;">${h}</body></html>`;
+      }
+
       // Populate outputs — use blob URL so full HTML document renders correctly
-      const blob = new Blob([html], { type: 'text/html' });
+      const blob = new Blob([ensureFullDocument(html)], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const iframe = document.getElementById('html-preview');
       iframe.src = url;

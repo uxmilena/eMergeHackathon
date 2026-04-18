@@ -1358,14 +1358,12 @@
         </div>
       </div>
 
-      <div class="sync-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-        <div class="section-label" style="margin:0;">Latest Regulatory Updates</div>
-        <button id="sync-btn" onclick="syncDashboard()" 
-          style="background:var(--text);color:var(--surface);border:none;padding:8px 16px;font-family:var(--font-body);font-size:11px;text-transform:uppercase;letter-spacing:0.15em;font-weight:600;cursor:pointer;">
-          ↻ Sync Now
-        </button>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="section-label">Latest Regulatory Updates</div>
+        <button class="refresh-btn" id="refresh-btn" onclick="refreshRegulations()">↻ Refresh</button>
       </div>
-      <div id="sync-status" style="font-size:11px;color:var(--muted);margin-bottom:12px;display:none;"></div>
+      <div id="refresh-status" style="font-size:11px;color:var(--muted);min-height:14px;margin-top:-8px;"></div>
+
       <!-- Card 1 — Critical -->
       <div class="reg-card critical">
         <div class="card-top-row">
@@ -1433,10 +1431,6 @@
           </div>
           <button class="cta-btn cta-btn-black" onclick="showEditScreen('card3')">Update Policy →</button>
         </div>
-      </div>
-      <div id="live-sync-section" style="display:none;margin-top:24px;">
-        <div class="section-label" style="margin-bottom:16px;">Live from Federal Register</div>
-        <div id="dashboard-cards"></div>
       </div>
 
     </section>
@@ -2286,7 +2280,7 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
   <div class="hero-title">YOUR REMOTE<br/>WORK POLICY<br/>JUST CHANGED.</div>
   <div class="hero-sub">New state-level requirements affect how we handle remote work expenses. Here is what you need to know.</div>
   <div class="hero-states">
-    <span class="state-pill">CA</span>
+  <span class="state-pill">CA</span>
     <span class="state-pill">NY</span>
     <span class="state-pill">IL</span>
     <span class="state-pill gray">Not affected: TX · FL · OR</span>
@@ -2406,8 +2400,14 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
       const emailBod= data?.email_body           || MOCK_OUTPUTS.email_body;
       const tldr    = data?.tldr                 || MOCK_OUTPUTS.tldr;
 
+      // Wrap fragment in full document if API returned a partial HTML snippet
+      function ensureFullDocument(h) {
+        if (/^\s*<!doctype/i.test(h)) return h;
+        return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;">${h}</body></html>`;
+      }
+
       // Populate outputs — use blob URL so full HTML document renders correctly
-      const blob = new Blob([html], { type: 'text/html' });
+      const blob = new Blob([ensureFullDocument(html)], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const iframe = document.getElementById('html-preview');
       iframe.src = url;
@@ -2518,82 +2518,6 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
         el.style.color = '#E8221A';
       }
     })();
-    // ── DASHBOARD SYNC ────────────────────────────────────
-const API_BASE = 'https://emergehackathon.onrender.com';
-
-async function syncDashboard() {
-  const btn = document.getElementById('sync-btn');
-  const status = document.getElementById('sync-status');
-  const section = document.getElementById('live-sync-section');
-  
-  btn.disabled = true;
-  btn.textContent = '⟳ Syncing...';
-  status.style.display = 'block';
-  status.textContent = 'Checking Federal Register for new DOL rules...';
-  
-  try {
-    const res = await fetch(`${API_BASE}/dashboard-sync`, {
-      signal: AbortSignal.timeout(30000)
-    });
-    if (!res.ok) throw new Error(`Backend returned ${res.status}`);
-    const data = await res.json();
-    
-    const timestamp = new Date(data.synced_at).toLocaleString();
-    status.textContent = `✓ Synced ${timestamp} · ${data.card_count} rules from Federal Register`;
-    
-    renderLiveCards(data.cards);
-    section.style.display = 'block';
-  } catch (err) {
-    status.textContent = `Sync failed: ${err.message}`;
-    status.style.color = 'var(--accent)';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '↻ Sync Now';
-  }
-}
-
-function renderLiveCards(cards) {
-  const container = document.getElementById('dashboard-cards');
-  if (!cards || cards.length === 0) {
-    container.innerHTML = '<div style="padding:24px;color:var(--muted);font-size:13px;">No new rules found.</div>';
-    return;
-  }
-  
-  container.innerHTML = cards.map(card => `
-    <div class="reg-card">
-      <div class="card-top-row">
-        <div class="card-tags">
-          <span class="tag tag-agency">${escapeHtml(card.source)}</span>
-          <span class="tag tag-date">${formatDate(card.date)}</span>
-        </div>
-      </div>
-      <div style="font-size:15px;font-weight:500;color:var(--text);margin:10px 0 6px;line-height:1.4;">
-        ${escapeHtml(card.title)}
-      </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">
-        ${escapeHtml(card.abstract || '')}
-      </div>
-      ${card.url && card.url !== '#' ? `
-        <a href="${escapeAttr(card.url)}" target="_blank" rel="noopener" 
-           style="font-size:11px;color:var(--accent);text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">
-          View on Federal Register →
-        </a>
-      ` : ''}
-    </div>
-  `).join('');
-}
-
-function formatDate(iso) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-function escapeHtml(s) {
-  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function escapeAttr(s) { return escapeHtml(s); }
   </script>
 
 </body>
