@@ -1290,7 +1290,7 @@
       <div class="nav-item" data-screen="s-docs" onclick="showScreen('s-docs')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
-          Company Policies
+          Company Policies  
         </div>
       </div>
     </div>
@@ -1300,7 +1300,7 @@
       <div class="nav-item" data-screen="s-open" onclick="showScreen('s-open')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
-          Open Policies
+          Draft Policies
         </div>
         <span class="nav-badge">2</span>
       </div>
@@ -1358,12 +1358,32 @@
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div class="section-label">Latest Regulatory Updates</div>
-        <button class="refresh-btn" id="refresh-btn" onclick="refreshRegulations()">↻ Refresh</button>
-      </div>
-      <div id="refresh-status" style="font-size:11px;color:var(--muted);min-height:14px;margin-top:-8px;"></div>
+     <!-- Company Profile Input -->
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+  <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.22em;color:var(--muted);margin-bottom:10px;">
+    Company Profile · Canon tailors updates to your industry
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <input type="text" id="company-profile-input" 
+      placeholder="e.g., Remote SaaS company operating in CA, NY, IL..." 
+      value="Remote SaaS company; fully distributed engineering and CX teams across CA, NY, IL"
+      style="flex:1;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:4px;font-family:var(--font-body);font-size:13px;color:var(--black);outline:none;">
+    <button class="upload-btn" onclick="saveCompanyProfile()">
+      Set Industry
+    </button>
+  </div>
+  <div id="profile-status" style="font-size:11px;color:var(--muted);margin-top:8px;display:none;"></div>
+</div>
 
+<!-- Sync header -->
+<div class="sync-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+  <div class="section-label" style="margin:0;">Latest Regulatory Updates</div>
+  <button id="sync-btn" class="upload-btn" onclick="syncDashboard()">
+    ↻ Sync Now
+  </button>
+</div>
+
+<div id="sync-status" style="font-size:11px;color:var(--muted);margin-bottom:12px;display:none;"></div>
       <!-- Card 1 — Critical -->
       <div class="reg-card critical">
         <div class="card-top-row">
@@ -1432,7 +1452,10 @@
           <button class="cta-btn cta-btn-black" onclick="showEditScreen('card3')">Update Policy →</button>
         </div>
       </div>
-
+      <div id="live-sync-section" style="display:none;margin-top:24px;">
+        <div class="section-label" style="margin-bottom:16px;">Live from Federal Register</div>
+        <div id="dashboard-cards"></div>
+      </div>
     </section>
 
     <!-- DOCUMENTS -->
@@ -1505,15 +1528,68 @@
 
     </section>
 
-    <!-- Placeholder screens (content added later) -->
-    <section id="s-open" class="screen"></section>
+    <!-- OPEN POLICIES -->
+    <section id="s-open" class="screen">
+
+      <div>
+        <div class="dash-eyebrow">(CANON — 03) · 2026</div>
+        <div class="edit-heading">OPEN POLICIES</div>
+      </div>
+
+      <!-- In Progress -->
+      <div class="section-label" style="margin-top:8px;margin-bottom:12px;">In Progress</div>
+      <div class="doc-list">
+        <div class="doc-row">
+          <div class="doc-abbr">RW</div>
+          <div class="doc-info">
+            <div class="doc-name">Remote Work Policy v2.1</div>
+            <div class="doc-meta">HR · Last edited today</div>
+          </div>
+          <span class="doc-status status-review" style="background:#f0f0f0;color:#888;">In Progress</span>
+          <button class="btn-outline-sm" onclick="showScreen('s-edit')" style="margin-left:12px;white-space:nowrap;">Continue Editing →</button>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">BG</div>
+          <div class="doc-info">
+            <div class="doc-name">Benefits Guide v1.3</div>
+            <div class="doc-meta">HR · Last edited Apr 10</div>
+          </div>
+          <span class="doc-status status-review" style="background:#f0f0f0;color:#888;">Draft</span>
+          <button class="btn-outline-sm" style="margin-left:12px;white-space:nowrap;">Continue Editing →</button>
+        </div>
+      </div>
+
+      <!-- Pending Approval -->
+      <div class="section-label" style="margin-top:24px;margin-bottom:12px;">Pending Approval</div>
+      <div class="doc-list">
+        <div class="doc-row">
+          <div class="doc-abbr">PL</div>
+          <div class="doc-info">
+            <div class="doc-name">Parental Leave Policy v2.1</div>
+            <div class="doc-meta">HR · Sent Apr 12</div>
+          </div>
+          <span class="doc-status" style="background:#fff8e6;color:#b8860b;">Awaiting Legal</span>
+          <button class="btn-outline-sm" style="margin-left:12px;">View →</button>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">CC</div>
+          <div class="doc-info">
+            <div class="doc-name">Code of Conduct v4.0</div>
+            <div class="doc-meta">Legal · Sent Apr 8</div>
+          </div>
+          <span class="doc-status" style="background:#fff8e6;color:#b8860b;">Awaiting CEO</span>
+          <button class="btn-outline-sm" style="margin-left:12px;">View →</button>
+        </div>
+      </div>
+
+    </section>
     <!-- EDIT & REVIEW -->
     <section id="s-edit" class="screen">
 
       <!-- Header -->
       <div>
-        <div class="edit-eyebrow">Policy Update · Remote Work Policy v2.1 · CA · NY · IL</div>
-        <div class="edit-heading">WHAT NEEDS TO CHANGE</div>
+        <div class="edit-eyebrow" id="edit-eyebrow">Policy Update · Remote Work Policy v2.1 · CA · NY · IL</div>
+        <div class="edit-heading" id="edit-heading">WHAT NEEDS TO CHANGE</div>
       </div>
 
       <!-- Stepper -->
@@ -1566,11 +1642,11 @@
         <div class="edit-panel">
           <div class="panel-header">
             <span class="panel-header-label">Regulation Update</span>
-            <span class="panel-pill panel-pill-red">Dept. of Labor · Apr 14</span>
+            <span id="edit-reg-pill" class="panel-pill panel-pill-red">Dept. of Labor · Apr 14</span>
           </div>
           <div class="panel-body">
-            <div class="panel-title">Remote Worker Expense Reimbursement</div>
-            <div class="panel-text">Employers in CA, NY, and IL must reimburse employees for all reasonable remote work expenses including internet, phone, equipment, and supplies required to perform job duties.</div>
+            <div id="edit-reg-title" class="panel-title">Remote Worker Expense Reimbursement</div>
+            <div id="edit-reg-text" class="panel-text">Employers in CA, NY, and IL must reimburse employees for all reasonable remote work expenses including internet, phone, equipment, and supplies required to perform job duties.</div>
             <div class="highlight-red" id="reg-flag">Your policy has no expense reimbursement clause for remote workers in these states.</div>
           </div>
         </div>
@@ -1579,11 +1655,11 @@
         <div class="edit-panel">
           <div class="panel-header">
             <span class="panel-header-label">Your Current Policy</span>
-            <span class="panel-pill panel-pill-gray">Remote Work Policy v2.1</span>
+            <span id="edit-policy-pill" class="panel-pill panel-pill-gray">Remote Work Policy v2.1</span>
           </div>
           <div class="panel-body">
-            <div class="panel-title">Section 4 — Equipment & Resources</div>
-            <div class="panel-text">The company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.</div>
+            <div id="edit-policy-title" class="panel-title">Section 4 — Equipment & Resources</div>
+            <div id="edit-policy-text" class="panel-text">The company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.</div>
             <div class="highlight-red" id="policy-flag">Missing: No expense reimbursement obligations mentioned.</div>
             <div class="highlight-green" id="canon-suggest">Canon suggests: "Employees in CA, NY, or IL are entitled to reimbursement for reasonable remote work expenses. Submit monthly via HR portal."</div>
           </div>
@@ -1668,21 +1744,21 @@
         </div>
       </div>
 
-      <!-- Card 1 -->
+      <!-- Card 1 — dynamic, matches selected policy -->
       <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">MK</div>
+            <div id="approval-initials" style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">MK</div>
             <div>
-              <div style="font-size:13px;font-weight:500;color:#0a0a0a;">Michael K. · Legal Counsel</div>
-              <div style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Remote Work Policy v2.1</div>
+              <div id="approval-name" style="font-size:13px;font-weight:500;color:#0a0a0a;">Michael K. · Legal Counsel</div>
+              <div id="approval-reviewing" style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Remote Work Policy v2.1</div>
             </div>
           </div>
           <span style="background:#fff8e6;color:#b8860b;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;padding:4px 10px;border-radius:3px;flex-shrink:0;">Pending</span>
         </div>
         <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
           <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
-          <div style="font-size:12px;color:#666;line-height:1.5;">One change: Expense reimbursement clause added for CA, NY, IL remote workers. No other sections affected. Estimated review time: under 10 minutes.</div>
+          <div id="approval-summary" style="font-size:12px;color:#666;line-height:1.5;">One change: Expense reimbursement clause added for CA, NY, IL remote workers. No other sections affected. Estimated review time: under 10 minutes.</div>
         </div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
           <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
@@ -1690,7 +1766,7 @@
         </div>
       </div>
 
-      <!-- Card 2 -->
+      <!-- Card 2 — other department (Code of Conduct) -->
       <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
           <div style="display:flex;align-items:center;gap:12px;">
@@ -1705,6 +1781,28 @@
         <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
           <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
           <div style="font-size:12px;color:#666;line-height:1.5;">Code of Conduct v4.0 — Section 3 revised to reflect updated whistleblower protection guidelines.</div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
+          <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
+          <button style="background:#0a0a0a;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.06em;padding:10px 20px;border-radius:4px;border:none;cursor:pointer;" onclick="showScreen('s-generate')" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Approve &amp; Publish →</button>
+        </div>
+      </div>
+
+      <!-- Card 3 — other department (Data Privacy) -->
+      <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">RT</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#0a0a0a;">Rachel T. · Chief Privacy Officer</div>
+              <div style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Data Privacy Policy v3.1</div>
+            </div>
+          </div>
+          <span style="background:#fff8e6;color:#b8860b;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;padding:4px 10px;border-radius:3px;flex-shrink:0;">Pending</span>
+        </div>
+        <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Data Privacy Policy v3.1 — Cookie consent language updated to align with FTC guidance on dark patterns. One section affected.</div>
         </div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
           <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
@@ -1750,6 +1848,17 @@
           Canon AI · Distribution Recommendation
         </div>
         <div class="gen-ai-text">This update affects remote employees in CA, NY, and IL. Canon recommends: company-wide Slack announcement + branded HTML page + manager email distribution.</div>
+      </div>
+
+      <!-- Policy selector -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#aaa;margin-bottom:8px;">Select Policy to Announce</div>
+        <select style="width:100%;border:1px solid #e0e0e0;border-radius:6px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:#0a0a0a;background:white;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 14px center;">
+          <option>Remote Work Policy v2.2 — Updated today</option>
+          <option>Parental Leave Policy v2.1</option>
+          <option>Code of Conduct v4.0</option>
+          <option>Benefits Guide v1.3</option>
+        </select>
       </div>
 
       <div class="output-grid" id="output-grid">
@@ -1834,7 +1943,55 @@
 
     </section>
 
-    <section id="s-log" class="screen"></section>
+    <!-- VERSION LOG -->
+    <section id="s-log" class="screen">
+
+      <div>
+        <div class="dash-eyebrow">(CANON — 05) · 2026</div>
+        <div class="edit-heading">VERSION LOG</div>
+      </div>
+
+      <div class="doc-list" style="margin-top:8px;">
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V2.2</div>
+          <div class="doc-info">
+            <div class="doc-name">Expense reimbursement clause added</div>
+            <div class="doc-meta">Sara R. · Apr 2026</div>
+          </div>
+          <span class="doc-status status-action" style="background:#e8f5ee;color:#22a86e;">Current</span>
+        </div>
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V2.1</div>
+          <div class="doc-info">
+            <div class="doc-name">Remote work addendum</div>
+            <div class="doc-meta">Jamie L. · Mar 2026</div>
+          </div>
+          <span class="doc-status" style="background:#f0f0f0;color:#888;">Archived</span>
+        </div>
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V2.0</div>
+          <div class="doc-info">
+            <div class="doc-name">Full policy rewrite</div>
+            <div class="doc-meta">HR Team · Jan 2026</div>
+          </div>
+          <span class="doc-status" style="background:#f0f0f0;color:#888;">Archived</span>
+        </div>
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V1.0</div>
+          <div class="doc-info">
+            <div class="doc-name">Initial policy</div>
+            <div class="doc-meta">HR Dept · 2022</div>
+          </div>
+          <span class="doc-status" style="background:#f0f0f0;color:#888;">Archived</span>
+        </div>
+
+      </div>
+
+    </section>
 
   </main>
 
@@ -1874,7 +2031,13 @@
           { label: 'Gap identified', text: 'Section 4 of Remote Work Policy v2.1 has no reimbursement clause covering internet, phone, or equipment costs.' },
           { label: 'Required change', text: 'Add an expense reimbursement section covering all remote employees in CA, NY, and IL, with a monthly HR portal submission process.' },
           { label: 'Risk if unchanged', text: 'Non-compliance exposure in 3 states. Potential wage claim liability under CA Labor Code §2802, NY Labor Law, and IL Wage Payment Act.' }
-        ]
+        ],
+        approval: {
+          initials: 'MK',
+          name: 'Michael K. · Legal Counsel',
+          reviewing: 'Reviewing: Remote Work Policy v2.1',
+          summary: 'One change: Expense reimbursement clause added for CA, NY, and IL remote workers. No other sections affected. Estimated review time: under 10 minutes.'
+        }
       },
       card2: {
         eyebrow: 'Policy Update · Parental Leave Policy v2.1 · OR',
@@ -1900,7 +2063,13 @@
           { label: 'Gap identified', text: 'Section 3 of Parental Leave Policy v2.1 still references the old 60% rate.' },
           { label: 'Required change', text: 'Update Section 3 to reflect the 72% wage replacement rate and add an effective date of January 1, 2026.' },
           { label: 'Risk if unchanged', text: 'Underpayment of Oregon employees on leave. Potential ORS 659A complaint and Oregon BOLI enforcement action.' }
-        ]
+        ],
+        approval: {
+          initials: 'SR',
+          name: 'Sara R. · HR Director',
+          reviewing: 'Reviewing: Parental Leave Policy v2.1',
+          summary: 'One change: Wage replacement rate updated from 60% to 72% for Oregon employees, effective January 1, 2026. Estimated review time: under 5 minutes.'
+        }
       },
       card3: {
         eyebrow: 'Policy Update · Hiring & Recruitment Policy · Federal',
@@ -1926,7 +2095,13 @@
           { label: 'Gap identified', text: 'Section 2 of Hiring & Recruitment Policy has no mention of AI tools, disclosure obligations, or human review requirements.' },
           { label: 'Required change', text: 'Add an AI disclosure clause to Section 2 covering: written applicant notice, mandatory human review of AI decisions, and recordkeeping.' },
           { label: 'Risk if unchanged', text: 'EEOC enforcement exposure. Title VII disparate impact liability if AI screening produces discriminatory outcomes without documented oversight.' }
-        ]
+        ],
+        approval: {
+          initials: 'JL',
+          name: 'Jennifer L. · Chief People Officer',
+          reviewing: 'Reviewing: Hiring & Recruitment Policy',
+          summary: 'One change: AI disclosure clause added to Section 2 per EEOC guidance — written applicant notice required and human review of all AI-assisted hiring decisions.'
+        }
       }
     };
 
@@ -1936,27 +2111,25 @@
       currentCard = cardId;
       const d = CARD_DATA[cardId];
 
-      // Header
-      document.querySelector('#s-edit .edit-eyebrow').textContent = d.eyebrow;
-      document.querySelector('#s-edit .edit-heading').textContent = d.heading;
+      document.getElementById('edit-eyebrow').textContent   = d.eyebrow;
+      document.getElementById('edit-heading').textContent   = d.heading;
+      document.getElementById('edit-reg-pill').textContent  = d.reg.pill;
+      document.getElementById('edit-reg-title').textContent = d.reg.title;
+      document.getElementById('edit-reg-text').textContent  = d.reg.text;
+      document.getElementById('reg-flag').textContent       = d.reg.flag;
+      document.getElementById('edit-policy-pill').textContent  = d.policy.pill;
+      document.getElementById('edit-policy-title').textContent = d.policy.title;
+      document.getElementById('edit-policy-text').textContent  = d.policy.text;
+      document.getElementById('policy-flag').textContent    = d.policy.flag;
+      document.getElementById('canon-suggest').textContent  = d.policy.suggest;
+      document.getElementById('edit-textarea').value        = d.textarea;
 
-      // Regulation panel
-      document.querySelector('#s-edit .panel-pill-red').textContent = d.reg.pill;
-      document.querySelector('#s-edit .edit-panels .edit-panel:first-child .panel-title').textContent = d.reg.title;
-      document.querySelector('#s-edit .edit-panels .edit-panel:first-child .panel-text').textContent = d.reg.text;
-      document.getElementById('reg-flag').textContent = d.reg.flag;
+      // Approval card
+      document.getElementById('approval-initials').textContent  = d.approval.initials;
+      document.getElementById('approval-name').textContent      = d.approval.name;
+      document.getElementById('approval-reviewing').textContent = d.approval.reviewing;
+      document.getElementById('approval-summary').textContent   = d.approval.summary;
 
-      // Policy panel
-      document.querySelector('#s-edit .panel-pill-gray').textContent = d.policy.pill;
-      document.querySelector('#s-edit .edit-panels .edit-panel:last-child .panel-title').textContent = d.policy.title;
-      document.querySelector('#s-edit .edit-panels .edit-panel:last-child .panel-text').textContent = d.policy.text;
-      document.getElementById('policy-flag').textContent = d.policy.flag;
-      document.getElementById('canon-suggest').textContent = d.policy.suggest;
-
-      // Textarea
-      document.getElementById('edit-textarea').value = d.textarea;
-
-      // Reset analysis
       const btn = document.getElementById('analyze-btn');
       btn.textContent = 'Run Analysis →';
       btn.disabled = false;
@@ -2219,24 +2392,30 @@ ${c.extraBanner}
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
+body{margin:0;padding:0;}
+.wrap{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
 .hero{background:#0a0a0a;padding:48px 52px 40px;position:relative;overflow:hidden;}
 .hero-line{position:absolute;top:0;left:0;width:100%;height:3px;background:#E8221A;}
 .hero-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px);}
-.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;position:relative;}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
 .hero-brand{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.12em;color:white;}
 .hero-brand span{color:#E8221A;}
 .hero-date{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
-.hero-label{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#E8221A;margin-bottom:14px;position:relative;}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:56px;color:white;line-height:0.95;letter-spacing:0.02em;margin-bottom:16px;position:relative;}
-.hero-sub{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.6;max-width:480px;position:relative;}
-.hero-states{display:flex;gap:8px;margin-top:24px;position:relative;flex-wrap:wrap;}
+.hero-label{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#E8221A;margin-bottom:14px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:56px;color:white;line-height:0.95;letter-spacing:0.02em;margin-bottom:16px;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.6;max-width:480px;}
+.hero-states{display:flex;gap:8px;margin-top:24px;}
 .state-pill{background:#E8221A;color:white;padding:5px 12px;border-radius:3px;font-size:11px;font-weight:600;letter-spacing:0.08em;}
 .state-pill.gray{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);}
+.content{padding:0;}
 .section{padding:32px 52px;border-bottom:1px solid #e8e8e8;}
+.section:last-child{border-bottom:none;}
 .sec-label{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#bbb;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
 .sec-label::after{content:'';flex:1;height:1px;background:#e8e8e8;}
 .change-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -2247,115 +2426,118 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
 .change-num.green{color:#22a86e;}
 .change-title{font-size:14px;font-weight:500;color:#0a0a0a;margin-bottom:6px;line-height:1.3;}
 .change-text{font-size:12px;color:#777;line-height:1.6;}
-.step-row{display:flex;flex-direction:column;gap:8px;}
-.step{display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;}
-.step-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;}
-.step-title{font-size:13px;font-weight:500;margin-bottom:4px;}
-.step-text{font-size:12px;color:#777;line-height:1.5;}
+.action-section{background:#0a0a0a;padding:32px 52px;display:flex;align-items:center;justify-content:space-between;}
+.action-left{}
+.action-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;}
+.action-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:white;letter-spacing:0.04em;}
+.action-btn{background:#E8221A;color:white;border:none;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;white-space:nowrap;}
+.footer{background:#f0f0f0;padding:16px 52px;display:flex;align-items:center;justify-content:space-between;}
+.footer-left{font-size:11px;color:#999;}
+.footer-right{display:flex;align-items:center;gap:16px;}
+.footer-pill{font-size:10px;background:#e0e0e0;color:#666;padding:3px 8px;border-radius:3px;letter-spacing:0.06em;}
+.footer-pill.approved{background:#e8f5ee;color:#22a86e;}
 .who-section{padding:24px 52px;background:white;}
 .who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
 .who-card{background:#fafafa;border:1px solid #e8e8e8;border-radius:6px;padding:14px 16px;}
 .who-role{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:#bbb;margin-bottom:4px;}
 .who-name{font-size:13px;font-weight:500;color:#0a0a0a;}
-.action-section{background:#0a0a0a;padding:32px 52px;display:flex;align-items:center;justify-content:space-between;}
-.action-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;}
-.action-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:white;letter-spacing:0.04em;}
-.action-btn{background:#E8221A;color:white;border:none;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;}
-.footer{background:#f0f0f0;padding:16px 52px;display:flex;align-items:center;justify-content:space-between;}
-.footer-left{font-size:11px;color:#999;}
-.footer-right{display:flex;align-items:center;gap:8px;}
-.footer-pill{font-size:10px;background:#e0e0e0;color:#666;padding:3px 8px;border-radius:3px;letter-spacing:0.06em;}
-.footer-pill.approved{background:#e8f5ee;color:#22a86e;}
 </style>
 </head>
 <body>
-<div class="hero">
-  <div class="hero-line"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-top">
-    <div class="hero-brand">CANNON <span>LLC</span></div>
-    <div class="hero-date">April 18, 2026 · People Operations</div>
-  </div>
-  <div class="hero-label">Policy Update · Remote Work</div>
-  <div class="hero-title">YOUR REMOTE<br/>WORK POLICY<br/>JUST CHANGED.</div>
-  <div class="hero-sub">New state-level requirements affect how we handle remote work expenses. Here is what you need to know.</div>
-  <div class="hero-states">
-  <span class="state-pill">CA</span>
-    <span class="state-pill">NY</span>
-    <span class="state-pill">IL</span>
-    <span class="state-pill gray">Not affected: TX · FL · OR</span>
-  </div>
-</div>
-<div class="section">
-  <div class="sec-label">What changed</div>
-  <div class="change-row">
-    <div class="change-card red">
-      <div class="change-num">Before</div>
-      <div class="change-title">No expense reimbursement policy</div>
-      <div class="change-text">The company provided hardware but had no obligation to reimburse ongoing remote work costs like internet or phone.</div>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-line"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-top">
+      <div class="hero-brand">CANNON <span>LLC</span></div>
+      <div class="hero-date">April 18, 2026 · People Operations</div>
     </div>
-    <div class="change-card green">
-      <div class="change-num green">After</div>
-      <div class="change-title">Reimbursement now required in 3 states</div>
-      <div class="change-text">Employees in CA, NY, and IL are entitled to reimbursement for reasonable remote work expenses including internet, phone, and equipment.</div>
+    <div class="hero-label">Policy Update · Remote Work</div>
+    <div class="hero-title">YOUR REMOTE<br/>WORK POLICY<br/>JUST CHANGED.</div>
+    <div class="hero-sub">New state-level requirements affect how we handle remote work expenses. Here's what you need to know.</div>
+    <div class="hero-states">
+      <span class="state-pill">CA</span>
+      <span class="state-pill">NY</span>
+      <span class="state-pill">IL</span>
+      <span class="state-pill gray">Not affected: TX · FL · OR</span>
     </div>
   </div>
-</div>
-<div class="section">
-  <div class="sec-label">What you need to do</div>
-  <div class="step-row">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div>
-        <div class="step-title">Submit expenses monthly</div>
-        <div class="step-text">Log into the HR portal and submit your expense report by the last day of each month.</div>
+
+  <div class="section">
+    <div class="sec-label">What changed</div>
+    <div class="change-row">
+      <div class="change-card red">
+        <div class="change-num">Before</div>
+        <div class="change-title">No expense reimbursement policy</div>
+        <div class="change-text">The company provided hardware (laptop, monitor) but had no obligation to reimburse ongoing remote work costs like internet or phone.</div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div>
-        <div class="step-title">Check if you are eligible</div>
-        <div class="step-text">This applies to full-time remote employees in California, New York, and Illinois only.</div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div>
-        <div class="step-title">Questions? Contact HR</div>
-        <div class="step-text">Reach out to hr@cannonllc.com for questions about eligibility or the submission process.</div>
+      <div class="change-card green">
+        <div class="change-num green">After</div>
+        <div class="change-title">Reimbursement now required in 3 states</div>
+        <div class="change-text">Employees in CA, NY, and IL are entitled to reimbursement for reasonable remote work expenses including internet, phone, and equipment.</div>
       </div>
     </div>
   </div>
-</div>
-<div class="who-section">
-  <div class="sec-label">Approved by</div>
-  <div class="who-grid">
-    <div class="who-card">
-      <div class="who-role">HR Manager</div>
-      <div class="who-name">Sara R.</div>
-    </div>
-    <div class="who-card">
-      <div class="who-role">Legal Counsel</div>
-      <div class="who-name">Michael K.</div>
-    </div>
-    <div class="who-card">
-      <div class="who-role">Effective Date</div>
-      <div class="who-name">April 18, 2026</div>
+
+  <div class="section">
+    <div class="sec-label">What you need to do</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">01</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Submit expenses monthly</div>
+          <div style="font-size:12px;color:#777;line-height:1.5;">Log into the HR portal and submit your expense report by the last day of each month. Include receipts for internet, phone, and any required equipment.</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">02</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Check if you're eligible</div>
+          <div style="font-size:12px;color:#777;line-height:1.5;">This applies to full-time remote employees in California, New York, and Illinois only. Hybrid workers should consult their manager.</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">03</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Questions? Contact HR</div>
+          <div style="font-size:12px;color:#777;line-height:1.5;">Reach out to hr@cannonllc.com or your People Ops partner for any questions about eligibility, reimbursable expenses, or the submission process.</div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-<div class="action-section">
-  <div>
-    <div class="action-label">Next step</div>
-    <div class="action-title">SUBMIT YOUR FIRST CLAIM</div>
+
+  <div class="who-section">
+    <div class="sec-label">Approved by</div>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="who-role">HR Manager</div>
+        <div class="who-name">Sara R.</div>
+      </div>
+      <div class="who-card">
+        <div class="who-role">Legal Counsel</div>
+        <div class="who-name">Michael K.</div>
+      </div>
+      <div class="who-card">
+        <div class="who-role">Effective Date</div>
+        <div class="who-name">April 18, 2026</div>
+      </div>
+    </div>
   </div>
-  <button class="action-btn">Open HR Portal</button>
-</div>
-<div class="footer">
-  <div class="footer-left">Cannon LLC · Remote Work Policy v2.2 · Generated by Canon Policy OS</div>
-  <div class="footer-right">
-    <span class="footer-pill approved">Legal Approved</span>
-    <span class="footer-pill">v2.2</span>
+
+  <div class="action-section">
+    <div class="action-left">
+      <div class="action-label">Next step</div>
+      <div class="action-title">SUBMIT YOUR FIRST CLAIM →</div>
+    </div>
+    <button class="action-btn">Open HR Portal</button>
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">Cannon LLC · Remote Work Policy v2.2 · Generated by Canon Policy OS</div>
+    <div class="footer-right">
+      <span class="footer-pill approved">Legal Approved</span>
+      <span class="footer-pill">v2.2</span>
+    </div>
   </div>
 </div>
 </body>
@@ -2518,6 +2700,134 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
         el.style.color = '#E8221A';
       }
     })();
+    // ── DASHBOARD SYNC ────────────────────────────────────
+const API_BASE = 'https://emergehackathon.onrender.com';
+
+// Store tailored topics between sync calls
+let COMPANY_TOPICS = null;
+let COMPANY_PROFILE = null;
+
+async function saveCompanyProfile() {
+  const input = document.getElementById('company-profile-input');
+  const status = document.getElementById('profile-status');
+  const description = input.value.trim();
+  
+  if (!description) {
+    status.style.display = 'block';
+    status.style.color = 'var(--red)';
+    status.textContent = 'Please describe your company first.';
+    return;
+  }
+  
+  status.style.display = 'block';
+  status.style.color = 'var(--muted)';
+  status.textContent = '⟳ Canon is tailoring regulatory topics to your industry...';
+  
+  try {
+    const res = await fetch(`${API_BASE}/company-profile`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description, states: ['CA', 'NY', 'IL'] }),
+      signal: AbortSignal.timeout(20000)
+    });
+    if (!res.ok) throw new Error(`Backend returned ${res.status}`);
+    const data = await res.json();
+    
+    COMPANY_TOPICS = data.topics;
+    COMPANY_PROFILE = data;
+    
+    status.style.color = 'var(--black)';
+    status.innerHTML = `
+      <strong>${escapeHtml(data.industry_summary)}</strong><br>
+      Watching: ${data.topics.map(t => `<code style="background:#f5f5f5;padding:1px 6px;border-radius:3px;font-size:11px;">${escapeHtml(t)}</code>`).join(' ')}<br>
+      <span style="color:var(--muted);">Excluding: ${data.excluded_domains.join(', ')}</span>
+    `;
+  } catch (err) {
+    status.style.color = 'var(--red)';
+    status.textContent = `Failed to set profile: ${err.message}`;
+  }
+}
+
+async function syncDashboard() {
+  const btn = document.getElementById('sync-btn');
+  const status = document.getElementById('sync-status');
+  const section = document.getElementById('live-sync-section');
+  
+  btn.disabled = true;
+  btn.textContent = '⟳ Syncing...';
+  status.style.display = 'block';
+  status.textContent = 'Checking Federal Register for relevant rules...';
+  
+  const topicsParam = COMPANY_TOPICS 
+    ? '?topics=' + encodeURIComponent(COMPANY_TOPICS.join(','))
+    : '';
+  
+  try {
+    const res = await fetch(`${API_BASE}/dashboard-sync${topicsParam}`, {
+      signal: AbortSignal.timeout(30000)
+    });
+    if (!res.ok) throw new Error(`Backend returned ${res.status}`);
+    const data = await res.json();
+    
+    const timestamp = new Date(data.synced_at).toLocaleString();
+    const topicLabel = COMPANY_TOPICS 
+      ? 'tailored to your industry' 
+      : 'using default topics';
+    status.textContent = `✓ Synced ${timestamp} · ${data.card_count} rules ${topicLabel}`;
+    
+    renderLiveCards(data.cards);
+    section.style.display = 'block';
+  } catch (err) {
+    status.style.color = 'var(--red)';
+    status.textContent = `Sync failed: ${err.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↻ Sync Now';
+  }
+}
+
+function renderLiveCards(cards) {
+  const container = document.getElementById('dashboard-cards');
+  if (!cards || cards.length === 0) {
+    container.innerHTML = '<div style="padding:24px;color:var(--muted);font-size:13px;">No new rules found.</div>';
+    return;
+  }
+  
+  container.innerHTML = cards.map(card => `
+    <div class="reg-card">
+      <div class="card-top-row">
+        <div class="card-tags">
+          <span class="tag tag-agency">${escapeHtml(card.source)}</span>
+          <span class="tag tag-date">${formatDate(card.date)}</span>
+        </div>
+      </div>
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin:10px 0 6px;line-height:1.4;">
+        ${escapeHtml(card.title)}
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">
+        ${escapeHtml(card.abstract || '')}
+      </div>
+      ${card.url && card.url !== '#' ? `
+        <a href="${escapeAttr(card.url)}" target="_blank" rel="noopener" 
+           style="font-size:11px;color:var(--accent);text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">
+          View on Federal Register →
+        </a>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function escapeAttr(s) { return escapeHtml(s); }
   </script>
 
 </body>

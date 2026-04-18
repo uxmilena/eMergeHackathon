@@ -1528,8 +1528,61 @@
 
     </section>
 
-    <!-- Placeholder screens (content added later) -->
-    <section id="s-open" class="screen"></section>
+    <!-- OPEN POLICIES -->
+    <section id="s-open" class="screen">
+
+      <div>
+        <div class="dash-eyebrow">(CANON — 03) · 2026</div>
+        <div class="edit-heading">OPEN POLICIES</div>
+      </div>
+
+      <!-- In Progress -->
+      <div class="section-label" style="margin-top:8px;margin-bottom:12px;">In Progress</div>
+      <div class="doc-list">
+        <div class="doc-row">
+          <div class="doc-abbr">RW</div>
+          <div class="doc-info">
+            <div class="doc-name">Remote Work Policy v2.1</div>
+            <div class="doc-meta">HR · Last edited today</div>
+          </div>
+          <span class="doc-status status-review" style="background:#f0f0f0;color:#888;">In Progress</span>
+          <button class="btn-outline-sm" onclick="showScreen('s-edit')" style="margin-left:12px;white-space:nowrap;">Continue Editing →</button>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">BG</div>
+          <div class="doc-info">
+            <div class="doc-name">Benefits Guide v1.3</div>
+            <div class="doc-meta">HR · Last edited Apr 10</div>
+          </div>
+          <span class="doc-status status-review" style="background:#f0f0f0;color:#888;">Draft</span>
+          <button class="btn-outline-sm" style="margin-left:12px;white-space:nowrap;">Continue Editing →</button>
+        </div>
+      </div>
+
+      <!-- Pending Approval -->
+      <div class="section-label" style="margin-top:24px;margin-bottom:12px;">Pending Approval</div>
+      <div class="doc-list">
+        <div class="doc-row">
+          <div class="doc-abbr">PL</div>
+          <div class="doc-info">
+            <div class="doc-name">Parental Leave Policy v2.1</div>
+            <div class="doc-meta">HR · Sent Apr 12</div>
+          </div>
+          <span class="doc-status" style="background:#fff8e6;color:#b8860b;">Awaiting Legal</span>
+          <button class="btn-outline-sm" style="margin-left:12px;">View →</button>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">CC</div>
+          <div class="doc-info">
+            <div class="doc-name">Code of Conduct v4.0</div>
+            <div class="doc-meta">Legal · Sent Apr 8</div>
+          </div>
+          <span class="doc-status" style="background:#fff8e6;color:#b8860b;">Awaiting CEO</span>
+          <button class="btn-outline-sm" style="margin-left:12px;">View →</button>
+        </div>
+      </div>
+
+    </section>
     <!-- EDIT & REVIEW -->
     <section id="s-edit" class="screen">
 
@@ -1797,6 +1850,17 @@
         <div class="gen-ai-text">This update affects remote employees in CA, NY, and IL. Canon recommends: company-wide Slack announcement + branded HTML page + manager email distribution.</div>
       </div>
 
+      <!-- Policy selector -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#aaa;margin-bottom:8px;">Select Policy to Announce</div>
+        <select style="width:100%;border:1px solid #e0e0e0;border-radius:6px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:#0a0a0a;background:white;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 14px center;">
+          <option>Remote Work Policy v2.2 — Updated today</option>
+          <option>Parental Leave Policy v2.1</option>
+          <option>Code of Conduct v4.0</option>
+          <option>Benefits Guide v1.3</option>
+        </select>
+      </div>
+
       <div class="output-grid" id="output-grid">
         <div class="output-card selected" onclick="toggleOutputCard(this)">
           <div class="output-icon" style="background:#f5f5f5;">📄</div>
@@ -1879,7 +1943,55 @@
 
     </section>
 
-    <section id="s-log" class="screen"></section>
+    <!-- VERSION LOG -->
+    <section id="s-log" class="screen">
+
+      <div>
+        <div class="dash-eyebrow">(CANON — 05) · 2026</div>
+        <div class="edit-heading">VERSION LOG</div>
+      </div>
+
+      <div class="doc-list" style="margin-top:8px;">
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V2.2</div>
+          <div class="doc-info">
+            <div class="doc-name">Expense reimbursement clause added</div>
+            <div class="doc-meta">Sara R. · Apr 2026</div>
+          </div>
+          <span class="doc-status status-action" style="background:#e8f5ee;color:#22a86e;">Current</span>
+        </div>
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V2.1</div>
+          <div class="doc-info">
+            <div class="doc-name">Remote work addendum</div>
+            <div class="doc-meta">Jamie L. · Mar 2026</div>
+          </div>
+          <span class="doc-status" style="background:#f0f0f0;color:#888;">Archived</span>
+        </div>
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V2.0</div>
+          <div class="doc-info">
+            <div class="doc-name">Full policy rewrite</div>
+            <div class="doc-meta">HR Team · Jan 2026</div>
+          </div>
+          <span class="doc-status" style="background:#f0f0f0;color:#888;">Archived</span>
+        </div>
+
+        <div class="doc-row">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#E8221A;min-width:44px;">V1.0</div>
+          <div class="doc-info">
+            <div class="doc-name">Initial policy</div>
+            <div class="doc-meta">HR Dept · 2022</div>
+          </div>
+          <span class="doc-status" style="background:#f0f0f0;color:#888;">Archived</span>
+        </div>
+
+      </div>
+
+    </section>
 
   </main>
 
