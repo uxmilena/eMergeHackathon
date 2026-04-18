@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CANON — Policy OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8221A;
+    --black: #0A0A0A;
+    --white: #FAFAFA;
+    --gray-100: #F2F2F2;
+    --gray-200: #E0E0E0;
+    --gray-400: #999;
+    --gray-600: #555;
+    --bebas: 'Bebas Neue', sans-serif;
+    --dm: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--black); font-family: var(--dm); }
+
+  #progress {
+    position: fixed; top: 0; left: 0;
+    height: 3px; background: var(--red);
+    z-index: 1000;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  #counter {
+    position: fixed; bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; color: var(--gray-400);
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-btn {
+    position: fixed; top: 50%; z-index: 999;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; font-size: 20px; padding: 16px;
+    opacity: 0.3; transition: opacity 0.2s, color 0.3s;
+    color: var(--black);
+  }
+  .nav-btn:hover { opacity: 0.8; }
+  #prev { left: 16px; }
+  #next { right: 16px; }
+
+  #deck { width: 100%; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(.4,0,.2,1);
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+
+  .slide-inner {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    padding: 64px 88px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gray-400);
+  }
+  .eyebrow.red { color: var(--red); }
+  .eyebrow.dim { color: rgba(255,255,255,0.3); }
+
+  .slide.active .anim {
+    animation: fadeUp 0.5s cubic-bezier(.4,0,.2,1) both;
+  }
+  .slide.active .anim:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active .anim:nth-child(2) { animation-delay: 0.13s; }
+  .slide.active .anim:nth-child(3) { animation-delay: 0.21s; }
+  .slide.active .anim:nth-child(4) { animation-delay: 0.29s; }
+  .slide.active .anim:nth-child(5) { animation-delay: 0.37s; }
+  .slide.active .anim:nth-child(6) { animation-delay: 0.45s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══ S1 — HOOK ══════════════════════════════════════════════ */
+  #s1 { background: var(--white); }
+  #s1 .slide-inner { justify-content: center; align-items: flex-start; }
+
+  .word-hello {
+    font-family: var(--bebas);
+    font-size: clamp(100px, 17vw, 220px);
+    line-height: 0.85; color: var(--black);
+    letter-spacing: 0.01em;
+  }
+  .word-mf {
+    font-family: var(--bebas);
+    font-size: clamp(100px, 17vw, 220px);
+    line-height: 0.85; color: var(--black);
+    filter: blur(7px);
+    text-decoration: line-through;
+    text-decoration-color: var(--red);
+    text-decoration-thickness: 7px;
+    display: inline-block;
+  }
+  .canon-alert {
+    margin-top: 40px;
+    display: inline-flex; align-items: flex-start;
+    gap: 20px;
+    background: var(--black);
+    padding: 28px 36px;
+    max-width: 700px;
+    position: relative;
+  }
+  .canon-alert::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 5px; background: var(--red);
+  }
+  .canon-alert-icon { font-size: 26px; flex-shrink: 0; color: var(--red); margin-top: 3px; }
+  .canon-alert-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--red);
+  }
+  .canon-alert-text {
+    font-size: 17px; font-weight: 400;
+    line-height: 1.5; color: rgba(255,255,255,0.85); margin-top: 6px;
+  }
+  .canon-alert-sig {
+    font-size: 13px; font-weight: 600;
+    color: var(--red); margin-top: 8px; letter-spacing: 0.06em;
+  }
+  .s1-corner {
+    position: absolute; bottom: 64px; right: 88px; text-align: right;
+  }
+
+  /* ══ S2 — PROBLEM ══════════════════════════════════════════ */
+  #s2 { background: var(--white); }
+  #s2 .slide-inner { justify-content: space-between; }
+
+  .slide-header-row {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .slide-header-row.dark { border-color: rgba(255,255,255,0.08); }
+  .display-lg {
+    font-family: var(--bebas);
+    font-size: clamp(52px, 7.5vw, 100px);
+    line-height: 0.88; color: var(--black); letter-spacing: 0.01em;
+  }
+  .display-lg-white {
+    font-family: var(--bebas);
+    font-size: clamp(52px, 7.5vw, 100px);
+    line-height: 0.88; color: var(--white); letter-spacing: 0.01em;
+  }
+  .header-stat-num {
+    font-family: var(--bebas);
+    font-size: 60px; line-height: 1; color: var(--red);
+  }
+  .header-stat-label {
+    font-size: 10px; color: var(--gray-400);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px;
+  }
+
+  .problem-cols {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    flex: 1;
+    border: 1px solid var(--gray-200); border-top: none;
+  }
+  .prob-col {
+    padding: 32px 32px;
+    border-right: 1px solid var(--gray-200);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .prob-col:last-child { border-right: none; }
+  .prob-col-num { font-family: var(--bebas); font-size: 11px; letter-spacing: 0.2em; color: var(--red); }
+  .prob-col-title { font-family: var(--bebas); font-size: clamp(26px, 2.8vw, 38px); line-height: 0.95; color: var(--black); }
+  .prob-col-body { font-size: 13px; font-weight: 300; line-height: 1.65; color: var(--gray-600); }
+  .prob-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .prob-pill { padding: 4px 10px; border: 1px solid var(--gray-200); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-600); }
+  .prob-pill.hot { background: var(--red); border-color: var(--red); color: var(--white); }
+
+  /* ══ S3 — SOLUTION ══════════════════════════════════════════ */
+  #s3 { background: var(--black); }
+  #s3 .slide-inner { justify-content: space-between; }
+
+  .solution-flow { display: flex; flex-direction: column; flex: 1; }
+  .sol-step {
+    display: grid; grid-template-columns: 56px 1fr 160px;
+    align-items: stretch;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    min-height: 82px;
+  }
+  .sol-step:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+  .sol-num {
+    display: flex; align-items: center; justify-content: center;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    font-family: var(--bebas); font-size: 13px; letter-spacing: 0.15em; color: var(--red);
+  }
+  .sol-body { padding: 18px 28px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .sol-title { font-family: var(--bebas); font-size: clamp(20px, 2.2vw, 28px); letter-spacing: 0.03em; color: var(--white); line-height: 1; }
+  .sol-desc { font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.4); line-height: 1.55; }
+  .sol-tag { display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; border-left: 1px solid rgba(255,255,255,0.06); }
+  .sol-tag span { padding: 5px 12px; border: 1px solid rgba(255,255,255,0.1); font-size: 9px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.3); white-space: nowrap; }
+  .sol-step.hero { background: rgba(232,34,26,0.05); }
+  .sol-step.hero .sol-tag span { background: var(--red); border-color: var(--red); color: var(--white); }
+
+  /* ══ S4 — TECH ══════════════════════════════════════════════ */
+  #s4 { background: var(--white); }
+  #s4 .slide-inner { justify-content: space-between; }
+
+  .tech-rows { display: flex; flex-direction: column; flex: 1; }
+  .tech-row {
+    display: grid; grid-template-columns: 210px 1fr 190px;
+    border-bottom: 1px solid var(--gray-200);
+    min-height: 88px; align-items: stretch;
+  }
+  .tech-row:first-child { border-top: 1px solid var(--gray-200); }
+  .tech-layer { padding: 18px 24px; border-right: 1px solid var(--gray-200); display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+  .tech-layer-label { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+  .tech-layer-name { font-family: var(--bebas); font-size: 24px; letter-spacing: 0.03em; color: var(--black); line-height: 1; }
+  .tech-desc { padding: 18px 28px; font-size: 12px; font-weight: 300; color: var(--gray-600); line-height: 1.6; display: flex; align-items: center; }
+  .tech-chips { padding: 18px 24px; border-left: 1px solid var(--gray-200); display: flex; flex-direction: column; justify-content: center; gap: 6px; align-items: flex-end; }
+  .tech-chip { padding: 4px 10px; border: 1px solid var(--gray-200); font-size: 10px; font-weight: 500; letter-spacing: 0.08em; color: var(--gray-600); text-transform: uppercase; }
+  .tech-chip.dark { background: var(--black); border-color: var(--black); color: var(--white); }
+  .live-row { display: flex; align-items: center; gap: 10px; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #00C864; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.4);} }
+  .live-url { font-family: var(--bebas); font-size: 13px; letter-spacing: 0.08em; color: var(--black); }
+
+  /* ══ S5 — AI LAYER ══════════════════════════════════════════ */
+  #s5 { background: var(--black); }
+  #s5 .slide-inner { justify-content: space-between; }
+
+  .ai-cols {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    flex: 1;
+    border: 1px solid rgba(255,255,255,0.07); border-top: none;
+  }
+  .ai-col { padding: 32px 28px; border-right: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; }
+  .ai-col:last-child { border-right: none; }
+  .ai-col-num { font-family: var(--bebas); font-size: 11px; letter-spacing: 0.2em; color: var(--red); }
+  .ai-col-icon { font-size: 28px; margin-top: 14px; }
+  .ai-col-title { font-family: var(--bebas); font-size: clamp(26px, 2.8vw, 38px); line-height: 0.92; color: var(--white); margin-top: 10px; }
+  .ai-col-body { font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.45); line-height: 1.65; margin-top: 14px; flex: 1; }
+  .ai-col-tag { margin-top: 20px; padding: 5px 12px; border: 1px solid rgba(255,255,255,0.1); font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); display: inline-block; }
+  .ai-col.hero { background: rgba(232,34,26,0.06); border-color: rgba(232,34,26,0.18); }
+  .ai-col.hero .ai-col-tag { background: var(--red); border-color: var(--red); color: var(--white); }
+
+  .output-strip {
+    margin-top: 16px;
+    border: 1px solid rgba(255,255,255,0.07); border-top: none;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .out-item { padding: 14px 24px; border-right: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; }
+  .out-item:last-child { border-right: none; }
+  .out-icon { font-size: 15px; opacity: 0.4; }
+  .out-label { font-family: var(--bebas); font-size: 16px; letter-spacing: 0.06em; color: rgba(255,255,255,0.55); }
+  .out-badge { margin-left: auto; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+
+  /* ══ S6 — CLOSE ════════════════════════════════════════════ */
+  #s6 { background: var(--white); }
+  #s6 .slide-inner { justify-content: center; align-items: flex-start; }
+
+  .close-grid-bg {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 50%;
+    background-image: linear-gradient(var(--gray-200) 1px, transparent 1px), linear-gradient(90deg, var(--gray-200) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: linear-gradient(to left, rgba(0,0,0,0.15), transparent);
+    pointer-events: none;
+  }
+  .close-wordmark { font-family: var(--bebas); font-size: clamp(120px, 20vw, 260px); line-height: 0.82; color: var(--black); letter-spacing: 0.02em; }
+  .close-rule { width: 72px; height: 3px; background: var(--red); margin-top: 40px; }
+  .close-tagline { margin-top: 20px; font-size: clamp(14px, 1.4vw, 18px); font-weight: 300; color: var(--gray-600); line-height: 1.7; max-width: 420px; }
+  .close-url { margin-top: 32px; font-family: var(--bebas); font-size: 18px; letter-spacing: 0.16em; color: var(--red); }
+  .close-meta { position: absolute; bottom: 64px; right: 88px; text-align: right; }
+  .close-meta .track { font-family: var(--bebas); font-size: 16px; letter-spacing: 0.1em; color: var(--gray-300); margin-top: 4px; display: block; }
+
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="counter">01 / 06</div>
+<button class="nav-btn" id="prev">&#8592;</button>
+<button class="nav-btn" id="next">&#8594;</button>
+
+<div id="deck">
+
+  <!-- ══ S1 — HOOK ════════════════════════════════════════════ -->
+  <section class="slide active" id="s1" data-index="0">
+    <div class="slide-inner">
+      <div class="word-hello anim">HELLO</div>
+      <div class="word-mf anim">MOTHERF*CKERS</div>
+      <div class="canon-alert anim">
+        <div class="canon-alert-icon">⚠</div>
+        <div>
+          <div class="canon-alert-label">Policy Violation Detected</div>
+          <div class="canon-alert-text">STOP. That language is not compliant with your company communication policy. Section 4.2 — Professional Conduct Standards.</div>
+          <div class="canon-alert-sig">— Canon AI &nbsp;·&nbsp; flagged 0.3s after input</div>
+        </div>
+      </div>
+      <div class="s1-corner anim">
+        <div class="eyebrow">eMerge Americas 2026</div>
+        <div style="font-family:var(--bebas);font-size:24px;color:var(--black);letter-spacing:0.1em;margin-top:4px;">CANON</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ S2 — PROBLEM ═════════════════════════════════════════ -->
+  <section class="slide" id="s2" data-index="1">
+    <div class="slide-inner">
+      <div class="slide-header-row anim">
+        <div>
+          <div class="eyebrow red">The Problem</div>
+          <div class="display-lg" style="margin-top:10px;">Compliance is<br>a manual mess</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="header-stat-num">$8.3B</div>
+          <div class="header-stat-label">In annual labor violations · US employers</div>
+        </div>
+      </div>
+
+      <div class="problem-cols anim">
+        <div class="prob-col">
+          <div class="prob-col-num">01</div>
+          <div class="prob-col-title">Laws Change Constantly</div>
+          <div class="prob-col-body">Every state runs on its own calendar. Minimum wage, paid leave, predictive scheduling — updated independently, without warning to your HR team.</div>
+          <div class="prob-pills">
+            <span class="prob-pill hot">California</span>
+            <span class="prob-pill hot">New York</span>
+            <span class="prob-pill hot">Illinois</span>
+            <span class="prob-pill">Texas</span>
+            <span class="prob-pill hot">Oregon</span>
+            <span class="prob-pill">+ 45 more</span>
+          </div>
+        </div>
+        <div class="prob-col">
+          <div class="prob-col-num">02</div>
+          <div class="prob-col-title">No System to Track It</div>
+          <div class="prob-col-body">HR teams manually monitor Federal Register, DOL sites, and legal newsletters. 14 hours a month. No alerts, no automation, no audit trail — just open tabs.</div>
+          <div style="margin-top:16px;padding:14px 16px;border:1px solid var(--gray-200);background:var(--gray-100);">
+            <div style="font-size:10px;font-weight:700;color:var(--red);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;">Current Workflow</div>
+            <div style="font-size:12px;color:var(--gray-600);line-height:1.65;">Google Alert → Word doc → Email to Legal → Wait → Maybe update Handbook → Forget to tell employees</div>
+          </div>
+        </div>
+        <div class="prob-col">
+          <div class="prob-col-num">03</div>
+          <div class="prob-col-title">Remote Work Made It Worse</div>
+          <div class="prob-col-body">Post-2020, 68% of companies added employees in new states. Their policies never caught up. Every new hire in a new state is a potential liability.</div>
+          <div style="margin-top:auto;padding-top:20px;">
+            <div style="font-family:var(--bebas);font-size:52px;line-height:1;color:var(--black);">72<span style="font-size:22px;color:var(--gray-400);"> %</span></div>
+            <div style="font-size:10px;color:var(--gray-400);letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;">of HR teams have zero automation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ S3 — SOLUTION ════════════════════════════════════════ -->
+  <section class="slide" id="s3" data-index="2">
+    <div class="slide-inner">
+      <div class="slide-header-row dark anim">
+        <div>
+          <div class="eyebrow dim">The Solution</div>
+          <div class="display-lg-white" style="margin-top:10px;">Meet Canon</div>
+        </div>
+        <div style="max-width:320px;text-align:right;align-self:flex-end;">
+          <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.35);line-height:1.6;">A Policy OS that monitors, compares, updates, and communicates — automatically. HR stops firefighting and starts commanding.</div>
+        </div>
+      </div>
+
+      <div class="solution-flow anim">
+        <div class="sol-step">
+          <div class="sol-num">01</div>
+          <div class="sol-body">
+            <div class="sol-title">MONITOR — Syncs with government data in real time</div>
+            <div class="sol-desc">Pulls directly from the Federal Register and state DOL feeds. The moment a regulation changes, Canon sees it — filtered to what's relevant to your company and industry.</div>
+          </div>
+          <div class="sol-tag"><span>Live Data</span></div>
+        </div>
+        <div class="sol-step hero">
+          <div class="sol-num">02</div>
+          <div class="sol-body">
+            <div class="sol-title">ANALYZE — AI trained on your company's own policy docs</div>
+            <div class="sol-desc">Canon ingests your existing handbook on setup. Every new doc added deepens its understanding. The AI compares regulations against your specific policies — and flags exactly what needs to change.</div>
+          </div>
+          <div class="sol-tag"><span>Core AI</span></div>
+        </div>
+        <div class="sol-step">
+          <div class="sol-num">03</div>
+          <div class="sol-body">
+            <div class="sol-title">UPDATE — HR edits in 3 modes, Legal approves in one click</div>
+            <div class="sol-desc">Type, upload, or dictate. Canon suggests compliant replacement text. Routes to Legal for review. Full approval chain, full audit trail. No email threads, no chaos.</div>
+          </div>
+          <div class="sol-tag"><span>Workflow</span></div>
+        </div>
+        <div class="sol-step">
+          <div class="sol-num">04</div>
+          <div class="sol-body">
+            <div class="sol-title">COMMUNICATE — Generates on-brand outputs instantly</div>
+            <div class="sol-desc">One approved policy becomes an HTML page, Slack post, email draft, and PDF — in your brand voice, in seconds. HR is done. Legal is covered. Everyone is informed.</div>
+          </div>
+          <div class="sol-tag"><span>Output</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ S4 — TECH ═════════════════════════════════════════════ -->
+  <section class="slide" id="s4" data-index="3">
+    <div class="slide-inner">
+      <div class="slide-header-row anim">
+        <div>
+          <div class="eyebrow red">Architecture</div>
+          <div class="display-lg" style="margin-top:10px;">Built &amp; Live<br>in 8 Hours</div>
+        </div>
+        <div class="live-row" style="align-self:flex-end;">
+          <div class="live-dot"></div>
+          <a class="live-url" href="https://uxmilena.github.io/eMergeHackathon/" target="_blank" style="text-decoration:none;">UXMILENA.GITHUB.IO/EMERGEHACKATHON/DECK ↗</a>
+        </div>
+      </div>
+
+      <div class="tech-rows anim">
+        <div class="tech-row">
+          <div class="tech-layer">
+            <div class="tech-layer-label">Data Source</div>
+            <div class="tech-layer-name">Federal Register API</div>
+          </div>
+          <div class="tech-desc">Public government API streams new labor regulations, executive orders, and agency notices. Canon filters by your industry and state relevance automatically — no manual monitoring needed.</div>
+          <div class="tech-chips">
+            <span class="tech-chip">REST API</span>
+            <span class="tech-chip">Live Feed</span>
+          </div>
+        </div>
+        <div class="tech-row">
+          <div class="tech-layer">
+            <div class="tech-layer-label">Intelligence</div>
+            <div class="tech-layer-name">Claude AI</div>
+          </div>
+          <div class="tech-desc">Anthropic Claude API handles gap analysis, policy-to-regulation matching, compliance flagging, text suggestion, and all output generation. Trained on your company docs — not generic legal boilerplate.</div>
+          <div class="tech-chips">
+            <span class="tech-chip dark">Claude API</span>
+            <span class="tech-chip">RAG</span>
+          </div>
+        </div>
+        <div class="tech-row">
+          <div class="tech-layer">
+            <div class="tech-layer-label">Backend</div>
+            <div class="tech-layer-name">FastAPI</div>
+          </div>
+          <div class="tech-desc">Python FastAPI server handles authentication, role-based access control, policy versioning, approval workflow, and document storage. Deployed live on Render.</div>
+          <div class="tech-chips">
+            <span class="tech-chip">Python</span>
+            <span class="tech-chip">FastAPI</span>
+            <span class="tech-chip">Render</span>
+          </div>
+        </div>
+        <div class="tech-row">
+          <div class="tech-layer">
+            <div class="tech-layer-label">Frontend</div>
+            <div class="tech-layer-name">HTML / JS</div>
+          </div>
+          <div class="tech-desc">Vanilla HTML, CSS, and JavaScript. No framework overhead. Fast, clean, built for the HR desk — not the engineering org.</div>
+          <div class="tech-chips">
+            <span class="tech-chip">HTML/CSS</span>
+            <span class="tech-chip">Vanilla JS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ S5 — AI LAYER ════════════════════════════════════════ -->
+  <section class="slide" id="s5" data-index="4">
+    <div class="slide-inner">
+      <div class="slide-header-row dark anim">
+        <div>
+          <div class="eyebrow dim">The AI Layer</div>
+          <div class="display-lg-white" style="margin-top:10px;">How Canon<br>Actually Thinks</div>
+        </div>
+        <div style="max-width:300px;text-align:right;align-self:flex-end;">
+          <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.35);line-height:1.6;">Not a chatbot. A closed-loop compliance engine — trained on your docs, synced to government data, outputting in your brand.</div>
+        </div>
+      </div>
+
+      <div class="ai-cols anim">
+        <div class="ai-col">
+          <div class="ai-col-num">01</div>
+          <div class="ai-col-icon">📂</div>
+          <div class="ai-col-title">Trained on Your Docs</div>
+          <div class="ai-col-body">On setup, Canon ingests your policy handbook. Every new document you upload makes the AI smarter about your company's specific language, tone, and coverage gaps. It understands your policies — not just generic HR law.</div>
+          <div class="ai-col-tag">Company Knowledge Base</div>
+        </div>
+        <div class="ai-col hero">
+          <div class="ai-col-num">02</div>
+          <div class="ai-col-icon">🔗</div>
+          <div class="ai-col-title">Synced to Government</div>
+          <div class="ai-col-body">Canon connects directly to the Federal Register and state DOL feeds. New regulation published? Canon sees it instantly — then filters by your industry, your states, your headcount. HR only sees what's actually relevant. No noise.</div>
+          <div class="ai-col-tag">Live Regulatory Feed</div>
+        </div>
+        <div class="ai-col">
+          <div class="ai-col-num">03</div>
+          <div class="ai-col-icon">✨</div>
+          <div class="ai-col-title">On-Brand Outputs</div>
+          <div class="ai-col-body">After HR edits and Legal approves, Canon generates every communication format automatically — in your company's voice, your brand tone, your style. Not a template. A real branded asset, ready to publish.</div>
+          <div class="ai-col-tag">Multi-Format Generation</div>
+        </div>
+      </div>
+
+      <div class="output-strip anim">
+        <div class="out-item">
+          <div class="out-icon">🌐</div>
+          <div class="out-label">HTML Page</div>
+          <div class="out-badge">Auto-generated</div>
+        </div>
+        <div class="out-item">
+          <div class="out-icon">#</div>
+          <div class="out-label">Slack Post</div>
+          <div class="out-badge">Auto-generated</div>
+        </div>
+        <div class="out-item">
+          <div class="out-icon">✉</div>
+          <div class="out-label">Email Draft</div>
+          <div class="out-badge">Auto-generated</div>
+        </div>
+        <div class="out-item">
+          <div class="out-icon">📄</div>
+          <div class="out-label">PDF</div>
+          <div class="out-badge">Auto-generated</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ S6 — CLOSE ════════════════════════════════════════════ -->
+  <section class="slide" id="s6" data-index="5">
+    <div class="slide-inner">
+      <div class="close-grid-bg"></div>
+      <div class="eyebrow anim">eMerge Americas 2026 · Wildcard Track · Enterprise AI</div>
+      <div class="close-wordmark anim" style="margin-top:16px;">CANON</div>
+      <div class="close-rule anim"></div>
+      <div class="close-tagline anim">Policy OS for HR teams.<br>Monitor. Compare. Update. Communicate.<br>Compliance in 30 seconds — not 14 hours.</div>
+      <a class="close-url anim" href="https://uxmilena.github.io/eMergeHackathon/" target="_blank" style="text-decoration:none;">UXMILENA.GITHUB.IO/EMERGEHACKATHON/DECK ↗</a>
+      <div class="close-meta anim">
+        <div class="eyebrow">Built in 8hrs</div>
+        <span class="track">JUST THE 4 OF US</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progressBar = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+
+  const darkSlides = new Set([2, 4]); // s3, s5
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    current = (n + total) % total;
+    slides[current].classList.add('active');
+
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = String(current + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+
+    const dark = darkSlides.has(current);
+    counter.style.color = dark ? 'rgba(255,255,255,0.3)' : '';
+    [prevBtn, nextBtn].forEach(b => b.style.color = dark ? 'rgba(255,255,255,0.5)' : '');
+  }
+
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+    if (['ArrowLeft','ArrowUp'].includes(e.key)) { e.preventDefault(); goTo(current - 1); }
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>
