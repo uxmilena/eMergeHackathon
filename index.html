@@ -2576,7 +2576,7 @@ body{margin:0;padding:0;}
         data = null;
       }
 
-      const html    = data?.html_announcement    || MOCK_OUTPUTS.html_announcement;
+      const html    = mockHTML; // always use branded template; API html_announcement is unstyled
       const slack   = data?.slack_post           || MOCK_OUTPUTS.slack_post;
       const emailSub= data?.email_subject        || MOCK_OUTPUTS.email_subject;
       const emailBod= data?.email_body           || MOCK_OUTPUTS.email_body;
