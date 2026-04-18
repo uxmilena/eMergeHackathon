@@ -546,7 +546,60 @@ async def get_federal_regulations(
         "results": results,
     }
 
-
+@app.get("/dashboard-sync")
+async def dashboard_sync():
+    """
+    Live pull of recent DOL rules across all watched topics.
+    Returns dashboard-ready cards sorted by publication date.
+    """
+    topics = DEFAULT_FEDERAL_TOPICS  # ["overtime", "wage and hour", "family medical leave"]
+    
+    try:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            tasks = [_fetch_fr_topic(client, t) for t in topics]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+    except Exception as e:
+        raise HTTPException(502, f"Federal Register sync failed: {e}")
+    
+    cards = []
+    seen_urls = set()
+    for topic, result in zip(topics, results):
+        if isinstance(result, Exception):
+            continue
+        for doc in result:
+            url = doc.get("html_url")
+            if not url or url in seen_urls:
+                continue
+            seen_urls.add(url)
+            
+            title = doc.get("title") or "Untitled rule"
+            abstract = (doc.get("abstract") or "").strip()
+            # Abstracts can be long; truncate for card display
+            if len(abstract) > 260:
+                abstract = abstract[:257].rstrip() + "…"
+            
+            cards.append({
+                "source": "Dept. of Labor",
+                "source_type": "federal_register",
+                "date": doc.get("publication_date"),
+                "title": title,
+                "abstract": abstract,
+                "url": url,
+                "topic_query": topic,
+                "doc_type": doc.get("type", "Rule"),
+            })
+    
+    # Sort newest first
+    cards.sort(key=lambda c: c.get("date") or "", reverse=True)
+    
+    return {
+        "synced_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+        "sources_checked": ["Federal Register (DOL)"],
+        "topics_watched": topics,
+        "card_count": len(cards),
+        "cards": cards[:10],  # cap at 10 for clean UI
+    }
+    
 @app.post("/state-regulations")
 def get_state_regulations(req: StatesRequest):
     """Return curated labor-law rules for requested states."""
