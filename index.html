@@ -1691,21 +1691,21 @@
         </div>
       </div>
 
-      <!-- Card 1 -->
+      <!-- Card 1 — dynamic, matches selected policy -->
       <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">MK</div>
+            <div id="approval-initials" style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">MK</div>
             <div>
-              <div style="font-size:13px;font-weight:500;color:#0a0a0a;">Michael K. · Legal Counsel</div>
-              <div style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Remote Work Policy v2.1</div>
+              <div id="approval-name" style="font-size:13px;font-weight:500;color:#0a0a0a;">Michael K. · Legal Counsel</div>
+              <div id="approval-reviewing" style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Remote Work Policy v2.1</div>
             </div>
           </div>
           <span style="background:#fff8e6;color:#b8860b;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;padding:4px 10px;border-radius:3px;flex-shrink:0;">Pending</span>
         </div>
         <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
           <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
-          <div style="font-size:12px;color:#666;line-height:1.5;">One change: Expense reimbursement clause added for CA, NY, IL remote workers. No other sections affected. Estimated review time: under 10 minutes.</div>
+          <div id="approval-summary" style="font-size:12px;color:#666;line-height:1.5;">One change: Expense reimbursement clause added for CA, NY, IL remote workers. No other sections affected. Estimated review time: under 10 minutes.</div>
         </div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
           <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
@@ -1713,7 +1713,7 @@
         </div>
       </div>
 
-      <!-- Card 2 -->
+      <!-- Card 2 — other department (Code of Conduct) -->
       <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
           <div style="display:flex;align-items:center;gap:12px;">
@@ -1728,6 +1728,28 @@
         <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
           <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
           <div style="font-size:12px;color:#666;line-height:1.5;">Code of Conduct v4.0 — Section 3 revised to reflect updated whistleblower protection guidelines.</div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
+          <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
+          <button style="background:#0a0a0a;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.06em;padding:10px 20px;border-radius:4px;border:none;cursor:pointer;" onclick="showScreen('s-generate')" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Approve &amp; Publish →</button>
+        </div>
+      </div>
+
+      <!-- Card 3 — other department (Data Privacy) -->
+      <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">RT</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#0a0a0a;">Rachel T. · Chief Privacy Officer</div>
+              <div style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Data Privacy Policy v3.1</div>
+            </div>
+          </div>
+          <span style="background:#fff8e6;color:#b8860b;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;padding:4px 10px;border-radius:3px;flex-shrink:0;">Pending</span>
+        </div>
+        <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Data Privacy Policy v3.1 — Cookie consent language updated to align with FTC guidance on dark patterns. One section affected.</div>
         </div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
           <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
@@ -1897,7 +1919,13 @@
           { label: 'Gap identified', text: 'Section 4 of Remote Work Policy v2.1 has no reimbursement clause covering internet, phone, or equipment costs.' },
           { label: 'Required change', text: 'Add an expense reimbursement section covering all remote employees in CA, NY, and IL, with a monthly HR portal submission process.' },
           { label: 'Risk if unchanged', text: 'Non-compliance exposure in 3 states. Potential wage claim liability under CA Labor Code §2802, NY Labor Law, and IL Wage Payment Act.' }
-        ]
+        ],
+        approval: {
+          initials: 'MK',
+          name: 'Michael K. · Legal Counsel',
+          reviewing: 'Reviewing: Remote Work Policy v2.1',
+          summary: 'One change: Expense reimbursement clause added for CA, NY, and IL remote workers. No other sections affected. Estimated review time: under 10 minutes.'
+        }
       },
       card2: {
         eyebrow: 'Policy Update · Parental Leave Policy v2.1 · OR',
@@ -1923,7 +1951,13 @@
           { label: 'Gap identified', text: 'Section 3 of Parental Leave Policy v2.1 still references the old 60% rate.' },
           { label: 'Required change', text: 'Update Section 3 to reflect the 72% wage replacement rate and add an effective date of January 1, 2026.' },
           { label: 'Risk if unchanged', text: 'Underpayment of Oregon employees on leave. Potential ORS 659A complaint and Oregon BOLI enforcement action.' }
-        ]
+        ],
+        approval: {
+          initials: 'SR',
+          name: 'Sara R. · HR Director',
+          reviewing: 'Reviewing: Parental Leave Policy v2.1',
+          summary: 'One change: Wage replacement rate updated from 60% to 72% for Oregon employees, effective January 1, 2026. Estimated review time: under 5 minutes.'
+        }
       },
       card3: {
         eyebrow: 'Policy Update · Hiring & Recruitment Policy · Federal',
@@ -1949,7 +1983,13 @@
           { label: 'Gap identified', text: 'Section 2 of Hiring & Recruitment Policy has no mention of AI tools, disclosure obligations, or human review requirements.' },
           { label: 'Required change', text: 'Add an AI disclosure clause to Section 2 covering: written applicant notice, mandatory human review of AI decisions, and recordkeeping.' },
           { label: 'Risk if unchanged', text: 'EEOC enforcement exposure. Title VII disparate impact liability if AI screening produces discriminatory outcomes without documented oversight.' }
-        ]
+        ],
+        approval: {
+          initials: 'JL',
+          name: 'Jennifer L. · Chief People Officer',
+          reviewing: 'Reviewing: Hiring & Recruitment Policy',
+          summary: 'One change: AI disclosure clause added to Section 2 per EEOC guidance — written applicant notice required and human review of all AI-assisted hiring decisions.'
+        }
       }
     };
 
@@ -1971,6 +2011,12 @@
       document.getElementById('policy-flag').textContent    = d.policy.flag;
       document.getElementById('canon-suggest').textContent  = d.policy.suggest;
       document.getElementById('edit-textarea').value        = d.textarea;
+
+      // Approval card
+      document.getElementById('approval-initials').textContent  = d.approval.initials;
+      document.getElementById('approval-name').textContent      = d.approval.name;
+      document.getElementById('approval-reviewing').textContent = d.approval.reviewing;
+      document.getElementById('approval-summary').textContent   = d.approval.summary;
 
       const btn = document.getElementById('analyze-btn');
       btn.textContent = 'Run Analysis →';
