@@ -1532,8 +1532,8 @@
 
       <!-- Header -->
       <div>
-        <div class="edit-eyebrow">Policy Update · Remote Work Policy v2.1 · CA · NY · IL</div>
-        <div class="edit-heading">WHAT NEEDS TO CHANGE</div>
+        <div class="edit-eyebrow" id="edit-eyebrow">Policy Update · Remote Work Policy v2.1 · CA · NY · IL</div>
+        <div class="edit-heading" id="edit-heading">WHAT NEEDS TO CHANGE</div>
       </div>
 
       <!-- Stepper -->
@@ -1586,11 +1586,11 @@
         <div class="edit-panel">
           <div class="panel-header">
             <span class="panel-header-label">Regulation Update</span>
-            <span class="panel-pill panel-pill-red">Dept. of Labor · Apr 14</span>
+            <span id="edit-reg-pill" class="panel-pill panel-pill-red">Dept. of Labor · Apr 14</span>
           </div>
           <div class="panel-body">
-            <div class="panel-title">Remote Worker Expense Reimbursement</div>
-            <div class="panel-text">Employers in CA, NY, and IL must reimburse employees for all reasonable remote work expenses including internet, phone, equipment, and supplies required to perform job duties.</div>
+            <div id="edit-reg-title" class="panel-title">Remote Worker Expense Reimbursement</div>
+            <div id="edit-reg-text" class="panel-text">Employers in CA, NY, and IL must reimburse employees for all reasonable remote work expenses including internet, phone, equipment, and supplies required to perform job duties.</div>
             <div class="highlight-red" id="reg-flag">Your policy has no expense reimbursement clause for remote workers in these states.</div>
           </div>
         </div>
@@ -1599,11 +1599,11 @@
         <div class="edit-panel">
           <div class="panel-header">
             <span class="panel-header-label">Your Current Policy</span>
-            <span class="panel-pill panel-pill-gray">Remote Work Policy v2.1</span>
+            <span id="edit-policy-pill" class="panel-pill panel-pill-gray">Remote Work Policy v2.1</span>
           </div>
           <div class="panel-body">
-            <div class="panel-title">Section 4 — Equipment & Resources</div>
-            <div class="panel-text">The company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.</div>
+            <div id="edit-policy-title" class="panel-title">Section 4 — Equipment & Resources</div>
+            <div id="edit-policy-text" class="panel-text">The company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.</div>
             <div class="highlight-red" id="policy-flag">Missing: No expense reimbursement obligations mentioned.</div>
             <div class="highlight-green" id="canon-suggest">Canon suggests: "Employees in CA, NY, or IL are entitled to reimbursement for reasonable remote work expenses. Submit monthly via HR portal."</div>
           </div>
@@ -1956,27 +1956,19 @@
       currentCard = cardId;
       const d = CARD_DATA[cardId];
 
-      // Header
-      document.querySelector('#s-edit .edit-eyebrow').textContent = d.eyebrow;
-      document.querySelector('#s-edit .edit-heading').textContent = d.heading;
+      document.getElementById('edit-eyebrow').textContent   = d.eyebrow;
+      document.getElementById('edit-heading').textContent   = d.heading;
+      document.getElementById('edit-reg-pill').textContent  = d.reg.pill;
+      document.getElementById('edit-reg-title').textContent = d.reg.title;
+      document.getElementById('edit-reg-text').textContent  = d.reg.text;
+      document.getElementById('reg-flag').textContent       = d.reg.flag;
+      document.getElementById('edit-policy-pill').textContent  = d.policy.pill;
+      document.getElementById('edit-policy-title').textContent = d.policy.title;
+      document.getElementById('edit-policy-text').textContent  = d.policy.text;
+      document.getElementById('policy-flag').textContent    = d.policy.flag;
+      document.getElementById('canon-suggest').textContent  = d.policy.suggest;
+      document.getElementById('edit-textarea').value        = d.textarea;
 
-      // Regulation panel
-      document.querySelector('#s-edit .panel-pill-red').textContent = d.reg.pill;
-      document.querySelector('#s-edit .edit-panels .edit-panel:first-child .panel-title').textContent = d.reg.title;
-      document.querySelector('#s-edit .edit-panels .edit-panel:first-child .panel-text').textContent = d.reg.text;
-      document.getElementById('reg-flag').textContent = d.reg.flag;
-
-      // Policy panel
-      document.querySelector('#s-edit .panel-pill-gray').textContent = d.policy.pill;
-      document.querySelector('#s-edit .edit-panels .edit-panel:last-child .panel-title').textContent = d.policy.title;
-      document.querySelector('#s-edit .edit-panels .edit-panel:last-child .panel-text').textContent = d.policy.text;
-      document.getElementById('policy-flag').textContent = d.policy.flag;
-      document.getElementById('canon-suggest').textContent = d.policy.suggest;
-
-      // Textarea
-      document.getElementById('edit-textarea').value = d.textarea;
-
-      // Reset analysis
       const btn = document.getElementById('analyze-btn');
       btn.textContent = 'Run Analysis →';
       btn.disabled = false;
