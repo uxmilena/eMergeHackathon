@@ -890,25 +890,13 @@
 
     /* ─── API STATUS ───────────────────────────────────────────── */
     .api-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.15em;
       color: var(--muted);
-      font-weight: 500;
+      font-weight: 600;
+      transition: color 0.3s;
     }
-
-    .api-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--muted);
-    }
-
-    .api-dot.online { background: #27ae60; }
-    .api-dot.offline { background: var(--muted); }
 
   </style>
 </head>
@@ -922,10 +910,7 @@
       <span class="navbar-sub">Policy OS</span>
     </div>
     <div class="navbar-right">
-      <div class="api-status" id="apiStatus">
-        <div class="api-dot" id="apiDot"></div>
-        <span id="apiStatusText">Checking...</span>
-      </div>
+      <span class="api-status" id="apiStatus">● Checking...</span>
       <div class="role-badge">HR Manager</div>
       <div class="avatar">S</div>
     </div>
@@ -1041,7 +1026,7 @@
         <input class="search-bar" style="margin-bottom:0;flex:1;" type="text" placeholder="Search policies, departments, or topics…" />
         <label class="upload-area" style="padding:13px 20px;margin-bottom:0;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;">
           <input type="file" id="uploadInput" accept=".pdf,.docx,.txt" onchange="handleUpload(event)" />
-          <span class="upload-label"><strong>+ Upload Doc</strong></span>
+          <span class="upload-label upload-trigger"><strong>↑ Upload Document</strong></span>
         </label>
       </div>
 
@@ -1052,7 +1037,7 @@
         </div>
       </div>
 
-      <div class="doc-list">
+      <div class="doc-list" id="docList">
         <div class="doc-row" onclick="switchScreen('edit')">
           <div class="doc-abbr">RW</div>
           <div class="doc-info">
@@ -1134,7 +1119,7 @@
           California requires expense reimbursement for all remote work costs. Your current policy does not address this. Additionally, New York requires 72-hour advance notice for schedule changes. Oregon mandates predictive scheduling provisions for remote teams over 10 employees.
         </div>
         <div style="margin-top:12px;">
-          <button class="btn-outline" style="font-size:12px;padding:7px 14px;" onclick="runAnalyze()">ANALYZE WITH AI</button>
+          <button class="btn-outline" id="analyzeBtn" style="font-size:12px;padding:7px 14px;" onclick="runAnalyze(['CA','NY','OR'], 'Remote Work Policy')">ANALYZE WITH AI</button>
         </div>
       </div>
 
@@ -1394,18 +1379,10 @@
   const screens  = document.querySelectorAll('.screen');
 
   function switchScreen(id) {
-    // Hide all
-    screens.forEach(s => {
-      s.classList.remove('active');
-    });
-    // Show target
+    screens.forEach(s => s.classList.remove('active'));
     const target = document.getElementById('screen-' + id);
     if (target) target.classList.add('active');
-
-    // Update nav
-    navItems.forEach(n => {
-      n.classList.toggle('active', n.dataset.screen === id);
-    });
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.screen === id));
   }
 
   navItems.forEach(item => {
@@ -1413,14 +1390,10 @@
   });
 
   // ── STATE PILLS ─────────────────────────────────────────────────
-  function toggleState(el) {
-    el.classList.toggle('selected');
-  }
+  function toggleState(el) { el.classList.toggle('selected'); }
 
   // ── OUTPUT CARDS ────────────────────────────────────────────────
-  function toggleOutput(el) {
-    el.classList.toggle('selected');
-  }
+  function toggleOutput(el) { el.classList.toggle('selected'); }
 
   // ── TOAST ───────────────────────────────────────────────────────
   function showToast(msg, duration = 2800) {
@@ -1433,102 +1406,162 @@
   // ── LOADING STATE ────────────────────────────────────────────────
   function setLoading(btn, isLoading, label) {
     if (isLoading) {
+      btn.dataset.origLabel = btn.dataset.origLabel || btn.textContent;
       btn.textContent = 'PROCESSING...';
       btn.classList.add('loading');
     } else {
-      btn.textContent = label;
+      btn.textContent = label || btn.dataset.origLabel || btn.textContent;
       btn.classList.remove('loading');
     }
   }
 
+  // ── UTIL ─────────────────────────────────────────────────────────
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
   // ── API BASE ─────────────────────────────────────────────────────
-  const API = 'http://localhost:8000';
+  const API_BASE = 'https://emergehackathon.onrender.com';
 
   // ── API STATUS CHECK ─────────────────────────────────────────────
-  async function checkApiStatus() {
-    const dot  = document.getElementById('apiDot');
-    const text = document.getElementById('apiStatusText');
+  async function checkAPI() {
+    const el = document.getElementById('apiStatus');
     try {
-      const res = await fetch(API + '/health', { signal: AbortSignal.timeout(2500) });
-      if (res.ok) {
-        dot.className  = 'api-dot online';
-        text.textContent = 'Connected';
+      const res = await fetch(API_BASE + '/', { signal: AbortSignal.timeout(4000) });
+      const data = await res.json();
+      if (data.status === 'ok' || res.ok) {
+        el.textContent = '● LIVE';
+        el.style.color = '#27ae60';
       } else {
-        throw new Error();
+        throw new Error('not ok');
       }
-    } catch {
-      dot.className  = 'api-dot offline';
-      text.textContent = 'Offline · Mock Mode';
+    } catch (e) {
+      console.warn('API offline, using mock mode:', e);
+      el.textContent = '● OFFLINE · MOCK MODE';
+      el.style.color = '#E8221A';
     }
   }
 
-  checkApiStatus();
+  checkAPI();
 
   // ── UPLOAD ──────────────────────────────────────────────────────
   async function handleUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
+
+    // Find upload button and set loading state
+    const uploadBtn = document.querySelector('.upload-trigger');
+    if (uploadBtn) {
+      uploadBtn.textContent = 'UPLOADING...';
+      uploadBtn.style.opacity = '0.6';
+      uploadBtn.style.pointerEvents = 'none';
+    }
+
     showToast('Uploading ' + file.name + '…');
 
     const formData = new FormData();
     formData.append('file', file);
 
+    let filename = file.name;
     try {
-      const res = await fetch(API + '/upload', { method: 'POST', body: formData });
+      const res = await fetch(API_BASE + '/upload', {
+        method: 'POST',
+        body: formData
+      });
       if (res.ok) {
         const data = await res.json();
-        showToast('Uploaded: ' + (data.filename || file.name));
+        filename = data.filename || file.name;
+        showToast('Uploaded: ' + filename);
       } else {
-        throw new Error();
+        throw new Error('Upload failed: ' + res.status);
       }
-    } catch {
-      // Mock fallback
-      showToast('Uploaded (mock): ' + file.name);
+    } catch (e) {
+      console.error('Upload error:', e);
+      showToast('Uploaded (mock): ' + filename);
     }
 
+    // Add the doc to the documents list
+    addDocToList(filename);
+
+    if (uploadBtn) {
+      uploadBtn.textContent = '↑ Upload Document';
+      uploadBtn.style.opacity = '';
+      uploadBtn.style.pointerEvents = '';
+    }
     event.target.value = '';
   }
 
-  // ── ANALYZE ──────────────────────────────────────────────────────
-  async function runAnalyze() {
-    const btn = document.querySelector('[onclick="runAnalyze()"]');
-    const textEl = document.getElementById('editAiText');
-    const orig = btn.textContent;
-    btn.textContent = 'ANALYZING...';
-    btn.classList.add('loading');
+  function addDocToList(filename) {
+    const list = document.getElementById('docList');
+    if (!list) return;
+    const abbr = filename.replace(/\.[^/.]+$/, '').slice(0, 2).toUpperCase();
+    const row = document.createElement('div');
+    row.className = 'doc-row';
+    row.innerHTML = `
+      <div class="doc-abbr">${abbr}</div>
+      <div class="doc-info">
+        <div class="doc-name">${filename}</div>
+        <div class="doc-meta">Just uploaded · Processing...</div>
+      </div>
+      <span class="pill pill-draft">New</span>
+    `;
+    list.prepend(row);
+  }
 
-    const selectedStates = [...document.querySelectorAll('#statePills .state-pill.selected')]
-      .map(p => p.textContent.trim());
+  // ── ANALYZE ──────────────────────────────────────────────────────
+  // Called when clicking "Update Policy →" on a regulation card
+  async function runAnalyze(states, policyName) {
+    states = states || ['CA', 'NY', 'IL'];
+    policyName = policyName || 'Remote Work Policy';
+
+    // Navigate to edit screen
+    switchScreen('edit');
+
+    const btn = document.getElementById('analyzeBtn');
+    const textEl = document.getElementById('editAiText');
+
+    if (btn) {
+      btn.textContent = 'ANALYZING...';
+      btn.classList.add('loading');
+    }
+    if (textEl) textEl.textContent = 'Canon is analyzing your policy against the latest regulations...';
+
+    const policyText = `Section 4 — Equipment & Resources\n\nThe company will provide employees with necessary hardware for remote work including laptop and monitor where applicable. Employees are responsible for maintaining their own internet connectivity and home office setup. No expense reimbursement is provided for remote work costs unless pre-approved by management.`;
 
     try {
-      const res = await fetch(API + '/analyze', {
+      const res = await fetch(API_BASE + '/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          document: 'Remote Work Policy v2.1',
-          states: selectedStates
+          policy_text: policyText,
+          states: states,
+          company_name: 'Acme Corp'
         })
       });
 
       if (res.ok) {
         const data = await res.json();
-        if (data.issues || data.message) {
-          textEl.textContent = data.issues || data.message;
+        const flagText = data.issues || data.analysis || data.message || data.flags;
+        if (flagText && textEl) {
+          textEl.textContent = typeof flagText === 'string' ? flagText : JSON.stringify(flagText);
         }
+        showToast('Analysis complete');
       } else {
-        throw new Error();
+        throw new Error('Analyze failed: ' + res.status);
       }
-    } catch {
-      // Mock fallback — feels real
-      await delay(1200);
-      const stateTxt = selectedStates.join(', ') || 'selected states';
-      textEl.textContent =
-        `Analysis complete for ${stateTxt}. California requires expense reimbursement for all remote work costs (Labor Code §2802). New York requires 72-hour advance notice for schedule changes. Oregon mandates predictive scheduling provisions for remote teams of 10+ employees. 3 clauses need immediate update.`;
+    } catch (e) {
+      console.error('Analyze error:', e);
+      // Mock fallback
+      await delay(900);
+      const stateTxt = states.join(', ');
+      if (textEl) {
+        textEl.textContent = `Analysis complete for ${stateTxt}. California requires expense reimbursement for all remote work costs (Labor Code §2802). New York requires 72-hour advance notice for schedule changes. Illinois has similar provisions effective Jan 1, 2026. 3 clauses need immediate update — Canon has pre-drafted language below.`;
+      }
       showToast('Analysis complete — 3 issues found');
     }
 
-    btn.textContent = orig;
-    btn.classList.remove('loading');
+    if (btn) {
+      btn.textContent = 'RE-ANALYZE';
+      btn.classList.remove('loading');
+    }
   }
 
   // ── SEND FOR APPROVAL ────────────────────────────────────────────
@@ -1536,15 +1569,13 @@
     const btn = document.getElementById('sendApprovalBtn');
     setLoading(btn, true);
     await delay(900);
-
     try {
-      await fetch(API + '/submit-for-approval', {
+      await fetch(API_BASE + '/submit-for-approval', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ document: 'Remote Work Policy v2.1' })
       });
-    } catch {}
-
+    } catch (e) { console.warn('submit-for-approval offline:', e); }
     setLoading(btn, false, 'SEND FOR APPROVAL →');
     showToast('Sent for approval');
     await delay(300);
@@ -1556,9 +1587,8 @@
     const btn = document.getElementById('approveBtn');
     setLoading(btn, true, 'APPROVE & PUBLISH →');
     await delay(1000);
-
     try {
-      const res = await fetch(API + '/approve', {
+      const res = await fetch(API_BASE + '/approve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ document: 'Remote Work Policy v2.1' })
@@ -1566,10 +1596,9 @@
       if (res.ok) {
         const data = await res.json();
         const textEl = document.getElementById('approvalAiText');
-        if (data.message) textEl.textContent = data.message;
+        if (data.message && textEl) textEl.textContent = data.message;
       }
-    } catch {}
-
+    } catch (e) { console.warn('approve offline:', e); }
     setLoading(btn, false, 'APPROVE & PUBLISH →');
     showToast('Approved — moving to generate');
     await delay(300);
@@ -1589,36 +1618,58 @@
 
     setLoading(btn, true, 'GENERATE & PUBLISH ALL →');
 
+    const policyText = `Remote Work Policy v2.2 — Acme Corp\n\nSection 4 — Equipment & Resources\n\nThe company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.\n\nSection 4A — Expense Reimbursement (NEW)\n\nEmployees in CA, NY, or IL are entitled to reimbursement for reasonable and necessary remote work expenses including internet, phone, and supplies. Submit monthly via HR portal within 30 days of expense incurrence.`;
+
+    let previewHTML = null;
     try {
-      const res = await fetch(API + '/generate', {
+      const res = await fetch(API_BASE + '/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          document: 'Remote Work Policy v2.2',
-          formats: selected
+          policy_text: policyText,
+          company_name: 'Acme Corp',
+          states: ['CA', 'NY', 'IL'],
+          change_summary: 'Added expense reimbursement clause for CA, NY, IL remote workers'
         })
       });
 
       if (res.ok) {
         const data = await res.json();
         const genTextEl = document.getElementById('generateAiText');
-        if (data.message) genTextEl.textContent = data.message;
+        if (data.message && genTextEl) genTextEl.textContent = data.message;
+        if (data.html || data.output || data.content) {
+          previewHTML = data.html || data.output || data.content;
+        }
       } else {
-        throw new Error();
+        throw new Error('Generate failed: ' + res.status);
       }
-    } catch {
-      await delay(1600);
+    } catch (e) {
+      console.error('Generate error:', e);
+      await delay(1400);
     }
 
     setLoading(btn, false, 'GENERATE & PUBLISH ALL →');
+
+    // Show preview panel if we got HTML back
+    if (previewHTML) {
+      showGeneratePreview(previewHTML);
+    }
+
     showToast(selected.length + ' format' + (selected.length > 1 ? 's' : '') + ' published');
     await delay(400);
     switchScreen('version-log');
   }
 
-  // ── UTIL ─────────────────────────────────────────────────────────
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  function showGeneratePreview(html) {
+    let panel = document.getElementById('generatePreview');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'generatePreview';
+      panel.style.cssText = 'background:#fff;border:1px solid #e0e0e0;padding:24px;margin-bottom:20px;font-size:13px;line-height:1.7;max-height:320px;overflow-y:auto;';
+      const btn = document.getElementById('generateBtn');
+      btn.parentNode.insertBefore(panel, btn);
+    }
+    panel.innerHTML = html;
   }
 </script>
 </body>
