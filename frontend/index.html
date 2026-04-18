@@ -583,6 +583,357 @@
       min-height: 16px;
     }
 
+    /* ─── EDIT & REVIEW ─────────────────────────────────── */
+    .edit-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .edit-heading {
+      font-family: var(--font-display);
+      font-size: 48px;
+      letter-spacing: 0.02em;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    /* Stepper */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .step-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .step-circle.active   { background: var(--red); color: #fff; }
+    .step-circle.done     { background: var(--black); color: #fff; }
+    .step-circle.inactive { background: transparent; border: 1px solid #e0e0e0; color: #ccc; }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+
+    .step-label.active   { color: var(--red); }
+    .step-label.done     { color: var(--black); }
+    .step-label.inactive { color: #ccc; }
+
+    .step-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+      margin: 0 8px;
+      margin-bottom: 18px;
+    }
+
+    /* AI bar */
+    .ai-bar {
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .ai-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .ai-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      flex-shrink: 0;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.75); }
+    }
+
+    .ai-run-btn {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 7px 14px;
+      border-radius: 4px;
+      border: 1px solid var(--black);
+      background: transparent;
+      color: var(--black);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .ai-run-btn:hover:not(:disabled) { background: var(--black); color: #fff; }
+    .ai-run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Side by side panels */
+    .edit-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .edit-panel {
+      background: var(--surface);
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 8px;
+    }
+
+    .panel-header-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .panel-pill {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 9px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .panel-pill-red  { background: #fff0f0; color: var(--red); }
+    .panel-pill-gray { background: #f5f5f5; color: #888; }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--black);
+      line-height: 1.3;
+    }
+
+    .panel-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    .highlight-red {
+      border-left: 3px solid var(--red);
+      background: #fff0f0;
+      padding: 10px 12px;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      color: #c0392b;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .highlight-green {
+      border-left: 3px solid #27ae60;
+      background: #f0fff4;
+      padding: 10px 12px;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      color: #1a7a3a;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* Edit tabs */
+    .tab-bar {
+      background: #f5f5f5;
+      padding: 4px;
+      border-radius: 6px;
+      display: flex;
+      gap: 2px;
+      margin-bottom: 14px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      color: #aaa;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .tab-btn.active { background: #fff; color: var(--black); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .edit-textarea {
+      width: 100%;
+      min-height: 100px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: #444;
+      line-height: 1.7;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .edit-textarea:focus { border-color: var(--black); }
+
+    .drop-zone {
+      border: 1.5px dashed #e0e0e0;
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      color: #ccc;
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .drop-zone:hover { border-color: #bbb; color: #bbb; }
+
+    .drop-zone-sub {
+      font-size: 11px;
+      margin-top: 4px;
+      color: #ddd;
+    }
+
+    .voice-zone {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .wave-bars {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .wave-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: var(--red);
+      animation: wave 1s ease-in-out infinite;
+    }
+
+    .wave-bar:nth-child(1) { height: 8px;  animation-delay: 0s; }
+    .wave-bar:nth-child(2) { height: 16px; animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { height: 12px; animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { height: 20px; animation-delay: 0.45s; }
+    .wave-bar:nth-child(5) { height: 10px; animation-delay: 0.6s; }
+
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.4); }
+      50%       { transform: scaleY(1); }
+    }
+
+    .voice-text {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    /* Action row */
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 8px;
+    }
+
+    .btn-outline-sm {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+      background: transparent;
+      color: var(--black);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .btn-outline-sm:hover { border-color: var(--black); }
+
+    .btn-primary-sm {
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      padding: 10px 20px;
+      border-radius: 4px;
+      border: none;
+      background: var(--black);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary-sm:hover { opacity: 0.85; }
+
     /* ─── SCROLLBAR ──────────────────────────────────────── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -833,7 +1184,126 @@
     <!-- Placeholder screens (content added later) -->
     <section id="s-open"      class="screen"></section>
     <section id="s-approvals" class="screen"></section>
-    <section id="s-edit"      class="screen"></section>
+    <!-- EDIT & REVIEW -->
+    <section id="s-edit" class="screen">
+
+      <!-- Header -->
+      <div>
+        <div class="edit-eyebrow">Policy Update · Remote Work Policy v2.1 · CA · NY · IL</div>
+        <div class="edit-heading">WHAT NEEDS TO CHANGE</div>
+      </div>
+
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="step">
+          <div class="step-circle active">1</div>
+          <span class="step-label active">Review</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle inactive">2</div>
+          <span class="step-label inactive">Edit</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle inactive">3</div>
+          <span class="step-label inactive">Approve</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle inactive">4</div>
+          <span class="step-label inactive">Publish</span>
+        </div>
+      </div>
+
+      <!-- AI Analyze Bar -->
+      <div class="ai-bar">
+        <div class="ai-bar-left">
+          <div class="ai-pulse"></div>
+          CANON AI · Ready to analyze your policy
+        </div>
+        <button class="ai-run-btn" id="analyze-btn" onclick="runAnalysis()">Run Analysis →</button>
+      </div>
+
+      <!-- Side by side panels -->
+      <div class="edit-panels">
+
+        <!-- Left: Regulation Update -->
+        <div class="edit-panel">
+          <div class="panel-header">
+            <span class="panel-header-label">Regulation Update</span>
+            <span class="panel-pill panel-pill-red">Dept. of Labor · Apr 14</span>
+          </div>
+          <div class="panel-body">
+            <div class="panel-title">Remote Worker Expense Reimbursement</div>
+            <div class="panel-text">Employers in CA, NY, and IL must reimburse employees for all reasonable remote work expenses including internet, phone, equipment, and supplies required to perform job duties.</div>
+            <div class="highlight-red" id="reg-flag">Your policy has no expense reimbursement clause for remote workers in these states.</div>
+          </div>
+        </div>
+
+        <!-- Right: Current Policy -->
+        <div class="edit-panel">
+          <div class="panel-header">
+            <span class="panel-header-label">Your Current Policy</span>
+            <span class="panel-pill panel-pill-gray">Remote Work Policy v2.1</span>
+          </div>
+          <div class="panel-body">
+            <div class="panel-title">Section 4 — Equipment & Resources</div>
+            <div class="panel-text">The company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.</div>
+            <div class="highlight-red" id="policy-flag">Missing: No expense reimbursement obligations mentioned.</div>
+            <div class="highlight-green" id="canon-suggest">Canon suggests: "Employees in CA, NY, or IL are entitled to reimbursement for reasonable remote work expenses. Submit monthly via HR portal."</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Edit Section -->
+      <div>
+        <div class="section-label" style="margin-bottom:12px;">How would you like to update?</div>
+
+        <!-- Tab bar -->
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('tab-type', this)">Type</button>
+          <button class="tab-btn" onclick="switchTab('tab-upload', this)">Upload</button>
+          <button class="tab-btn" onclick="switchTab('tab-voice', this)">Voice</button>
+        </div>
+
+        <!-- Type tab -->
+        <div class="tab-panel active" id="tab-type">
+          <textarea class="edit-textarea" id="edit-textarea">Employees working remotely in CA, NY, or IL are entitled to reimbursement for reasonable and necessary work-related expenses. This includes internet, phone, equipment, and supplies required to perform their duties. Expenses must be submitted monthly via the HR portal.</textarea>
+        </div>
+
+        <!-- Upload tab -->
+        <div class="tab-panel" id="tab-upload">
+          <div class="drop-zone">
+            Drop updated policy document here
+            <div class="drop-zone-sub">PDF, Word, or plain text</div>
+          </div>
+        </div>
+
+        <!-- Voice tab -->
+        <div class="tab-panel" id="tab-voice">
+          <div class="voice-zone">
+            <div class="wave-bars">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+            <div class="voice-text">Listening — speak your update, Canon formats it in company voice</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action row -->
+      <div class="action-row">
+        <button class="btn-outline-sm" onclick="showScreen('s-dash')">← Back</button>
+        <button class="btn-outline-sm">Save Draft</button>
+        <button class="btn-primary-sm" onclick="showScreen('s-approvals')">Send for Approval →</button>
+      </div>
+
+    </section>
     <section id="s-generate"  class="screen"></section>
     <section id="s-log"       class="screen"></section>
 
@@ -905,6 +1375,53 @@
       `;
       const list = document.getElementById('doc-list');
       list.insertBefore(row, list.firstChild);
+    }
+
+    // ── EDIT TABS ─────────────────────────────────────────
+    function switchTab(panelId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(panelId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // ── ANALYZE ───────────────────────────────────────────
+    async function runAnalysis() {
+      const btn = document.getElementById('analyze-btn');
+      btn.textContent = 'ANALYZING...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('https://emergehackathon.onrender.com/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            policy_text: 'The company will provide employees with necessary hardware for remote work including laptop and monitor.',
+            states: ['CA', 'NY', 'IL'],
+            company_name: 'Acme Corp'
+          })
+        });
+
+        if (!res.ok) throw new Error('Server error');
+        const data = await res.json();
+
+        const flag = data.issues || data.flags || data.analysis || data.message;
+        if (flag) {
+          const text = typeof flag === 'string' ? flag : JSON.stringify(flag);
+          document.getElementById('reg-flag').textContent = text;
+          document.getElementById('policy-flag').textContent = 'AI identified: ' + text.slice(0, 120) + (text.length > 120 ? '…' : '');
+        }
+
+        const suggest = data.suggestion || data.suggested_text || data.canon_suggests;
+        if (suggest) {
+          document.getElementById('canon-suggest').textContent = 'Canon suggests: "' + suggest + '"';
+        }
+
+        btn.textContent = 'Analysis Complete ✓';
+      } catch {
+        btn.textContent = 'Run Analysis →';
+        btn.disabled = false;
+      }
     }
 
     // ── API STATUS ────────────────────────────────────────
