@@ -2281,10 +2281,13 @@ ${c.extraBanner}
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
+body{margin:0;padding:0;}
+.wrap{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
 .hero{background:#0a0a0a;padding:48px 52px 40px;position:relative;overflow:hidden;}
 .hero-line{position:absolute;top:0;left:0;width:100%;height:3px;background:#E8221A;}
 .hero-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px);}
@@ -2329,98 +2332,100 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
 </style>
 </head>
 <body>
-<div class="hero">
-  <div class="hero-line"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-top">
-    <div class="hero-brand">CANNON <span>LLC</span></div>
-    <div class="hero-date">April 18, 2026 · People Operations</div>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-line"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-top">
+      <div class="hero-brand">CANNON <span>LLC</span></div>
+      <div class="hero-date">April 18, 2026 · People Operations</div>
+    </div>
+    <div class="hero-label">Policy Update · Remote Work</div>
+    <div class="hero-title">YOUR REMOTE<br/>WORK POLICY<br/>JUST CHANGED.</div>
+    <div class="hero-sub">New state-level requirements affect how we handle remote work expenses. Here's what you need to know.</div>
+    <div class="hero-states">
+      <span class="state-pill">CA</span>
+      <span class="state-pill">NY</span>
+      <span class="state-pill">IL</span>
+      <span class="state-pill gray">Not affected: TX · FL · OR</span>
+    </div>
   </div>
-  <div class="hero-label">Policy Update · Remote Work</div>
-  <div class="hero-title">YOUR REMOTE<br/>WORK POLICY<br/>JUST CHANGED.</div>
-  <div class="hero-sub">New state-level requirements affect how we handle remote work expenses. Here's what you need to know.</div>
-  <div class="hero-states">
-    <span class="state-pill">CA</span>
-    <span class="state-pill">NY</span>
-    <span class="state-pill">IL</span>
-    <span class="state-pill gray">Not affected: TX · FL · OR</span>
-  </div>
-</div>
 
-<div class="section">
-  <div class="sec-label">What changed</div>
-  <div class="change-row">
-    <div class="change-card red">
-      <div class="change-num">Before</div>
-      <div class="change-title">No expense reimbursement policy</div>
-      <div class="change-text">The company provided hardware (laptop, monitor) but had no obligation to reimburse ongoing remote work costs like internet or phone.</div>
-    </div>
-    <div class="change-card green">
-      <div class="change-num green">After</div>
-      <div class="change-title">Reimbursement now required in 3 states</div>
-      <div class="change-text">Employees in CA, NY, and IL are entitled to reimbursement for reasonable remote work expenses including internet, phone, and equipment.</div>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="sec-label">What you need to do</div>
-  <div style="display:flex;flex-direction:column;gap:8px;">
-    <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">01</div>
-      <div>
-        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Submit expenses monthly</div>
-        <div style="font-size:12px;color:#777;line-height:1.5;">Log into the HR portal and submit your expense report by the last day of each month. Include receipts for internet, phone, and any required equipment.</div>
+  <div class="section">
+    <div class="sec-label">What changed</div>
+    <div class="change-row">
+      <div class="change-card red">
+        <div class="change-num">Before</div>
+        <div class="change-title">No expense reimbursement policy</div>
+        <div class="change-text">The company provided hardware (laptop, monitor) but had no obligation to reimburse ongoing remote work costs like internet or phone.</div>
       </div>
-    </div>
-    <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">02</div>
-      <div>
-        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Check if you're eligible</div>
-        <div style="font-size:12px;color:#777;line-height:1.5;">This applies to full-time remote employees in California, New York, and Illinois only. Hybrid workers should consult their manager.</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">03</div>
-      <div>
-        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Questions? Contact HR</div>
-        <div style="font-size:12px;color:#777;line-height:1.5;">Reach out to hr@cannonllc.com or your People Ops partner for any questions about eligibility, reimbursable expenses, or the submission process.</div>
+      <div class="change-card green">
+        <div class="change-num green">After</div>
+        <div class="change-title">Reimbursement now required in 3 states</div>
+        <div class="change-text">Employees in CA, NY, and IL are entitled to reimbursement for reasonable remote work expenses including internet, phone, and equipment.</div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="who-section">
-  <div class="sec-label">Approved by</div>
-  <div class="who-grid">
-    <div class="who-card">
-      <div class="who-role">HR Manager</div>
-      <div class="who-name">Sara R.</div>
-    </div>
-    <div class="who-card">
-      <div class="who-role">Legal Counsel</div>
-      <div class="who-name">Michael K.</div>
-    </div>
-    <div class="who-card">
-      <div class="who-role">Effective Date</div>
-      <div class="who-name">April 18, 2026</div>
+  <div class="section">
+    <div class="sec-label">What you need to do</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">01</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Submit expenses monthly</div>
+          <div style="font-size:12px;color:#777;line-height:1.5;">Log into the HR portal and submit your expense report by the last day of each month. Include receipts for internet, phone, and any required equipment.</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">02</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Check if you're eligible</div>
+          <div style="font-size:12px;color:#777;line-height:1.5;">This applies to full-time remote employees in California, New York, and Illinois only. Hybrid workers should consult their manager.</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;">03</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px;">Questions? Contact HR</div>
+          <div style="font-size:12px;color:#777;line-height:1.5;">Reach out to hr@cannonllc.com or your People Ops partner for any questions about eligibility, reimbursable expenses, or the submission process.</div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="action-section">
-  <div class="action-left">
-    <div class="action-label">Next step</div>
-    <div class="action-title">SUBMIT YOUR FIRST CLAIM →</div>
+  <div class="who-section">
+    <div class="sec-label">Approved by</div>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="who-role">HR Manager</div>
+        <div class="who-name">Sara R.</div>
+      </div>
+      <div class="who-card">
+        <div class="who-role">Legal Counsel</div>
+        <div class="who-name">Michael K.</div>
+      </div>
+      <div class="who-card">
+        <div class="who-role">Effective Date</div>
+        <div class="who-name">April 18, 2026</div>
+      </div>
+    </div>
   </div>
-  <button class="action-btn">Open HR Portal</button>
-</div>
 
-<div class="footer">
-  <div class="footer-left">Cannon LLC · Remote Work Policy v2.2 · Generated by Canon Policy OS</div>
-  <div class="footer-right">
-    <span class="footer-pill approved">Legal Approved</span>
-    <span class="footer-pill">v2.2</span>
+  <div class="action-section">
+    <div class="action-left">
+      <div class="action-label">Next step</div>
+      <div class="action-title">SUBMIT YOUR FIRST CLAIM →</div>
+    </div>
+    <button class="action-btn">Open HR Portal</button>
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">Cannon LLC · Remote Work Policy v2.2 · Generated by Canon Policy OS</div>
+    <div class="footer-right">
+      <span class="footer-pill approved">Legal Approved</span>
+      <span class="footer-pill">v2.2</span>
+    </div>
   </div>
 </div>
 </body>
