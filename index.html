@@ -1917,7 +1917,10 @@
         <div class="output-tab-content">
 
           <div class="tab-panel active" id="gen-html">
-            <iframe id="html-preview" style="height:500px;width:100%;border:none;border-radius:8px;display:block;"></iframe>
+            <div style="position:relative;">
+              <iframe id="html-preview" style="height:500px;width:100%;border:none;border-radius:8px;display:block;"></iframe>
+              <button id="expand-btn" onclick="expandHtml()" style="display:none;position:absolute;top:12px;right:12px;background:rgba(10,10,10,0.75);color:white;border:none;border-radius:4px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;backdrop-filter:blur(4px);">⤢ EXPAND</button>
+            </div>
           </div>
 
           <div class="tab-panel" id="gen-slack">
@@ -2376,6 +2379,11 @@ ${c.extraBanner}
       btn.classList.add('active');
     }
 
+    // ── EXPAND HTML PREVIEW ───────────────────────────────
+    function expandHtml() {
+      if (window._htmlPreviewUrl) window.open(window._htmlPreviewUrl, '_blank');
+    }
+
     // ── COPY TO CLIPBOARD ────────────────────────────────
     function copyText(elId) {
       const el = document.getElementById(elId);
@@ -2591,8 +2599,10 @@ body{margin:0;padding:0;}
       // Populate outputs — use blob URL so full HTML document renders correctly
       const blob = new Blob([ensureFullDocument(html)], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
+      window._htmlPreviewUrl = url;
       const iframe = document.getElementById('html-preview');
       iframe.src = url;
+      document.getElementById('expand-btn').style.display = 'block';
       iframe.style.height = '500px';
       iframe.style.width = '100%';
       iframe.style.border = 'none';
