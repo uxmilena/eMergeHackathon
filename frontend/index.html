@@ -434,6 +434,155 @@
     .cta-btn-red   { background: var(--red); color: #fff; }
     .cta-btn-black { background: var(--black); color: #fff; }
 
+    /* ─── DOCUMENTS ──────────────────────────────────────── */
+    .ai-greeting {
+      background: #f5f5f5;
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .ai-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--black);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ai-greeting-body { flex: 1; }
+
+    .ai-greeting-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--black);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .ai-search {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 0 14px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      background: #fff;
+      color: var(--black);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .ai-search::placeholder { color: #bbb; }
+    .ai-search:focus { border-color: var(--black); }
+
+    .docs-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .upload-btn {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: 1px solid var(--black);
+      background: transparent;
+      color: var(--black);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .upload-btn:hover { background: var(--black); color: #fff; }
+
+    .doc-list {
+      background: var(--surface);
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .doc-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 18px;
+      border-bottom: 1px solid #f5f5f5;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .doc-row:last-child { border-bottom: none; }
+    .doc-row:hover { background: #fafafa; }
+
+    .doc-abbr {
+      width: 34px;
+      height: 34px;
+      border-radius: 5px;
+      background: var(--black);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0.04em;
+    }
+
+    .doc-info { flex: 1; min-width: 0; }
+
+    .doc-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--black);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .doc-meta {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 2px;
+    }
+
+    .doc-status {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-action  { background: #fff0f0; color: var(--red); }
+    .status-review  { background: #f5f5f5; color: #888; }
+    .status-current { background: var(--black); color: #fff; }
+
+    .upload-toast {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      min-height: 16px;
+    }
+
     /* ─── SCROLLBAR ──────────────────────────────────────── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -611,8 +760,77 @@
 
     </section>
 
+    <!-- DOCUMENTS -->
+    <section id="s-docs" class="screen">
+
+      <!-- AI Greeting -->
+      <div class="ai-greeting">
+        <div class="ai-avatar">AI</div>
+        <div class="ai-greeting-body">
+          <div class="ai-greeting-text">Hello Sara, what can I help you find in company docs?</div>
+          <input class="ai-search" type="text" placeholder="Try: show me all leave policies, or remote work..." />
+        </div>
+      </div>
+
+      <!-- Section header -->
+      <div class="docs-header-row">
+        <div class="section-label">All Documents</div>
+        <button class="upload-btn" onclick="triggerUpload()">↑ Upload Document</button>
+      </div>
+
+      <!-- Upload toast -->
+      <div class="upload-toast" id="upload-toast"></div>
+
+      <!-- Doc list -->
+      <div class="doc-list" id="doc-list">
+        <div class="doc-row" onclick="showScreen('s-edit')">
+          <div class="doc-abbr">RW</div>
+          <div class="doc-info">
+            <div class="doc-name">Remote Work Policy</div>
+            <div class="doc-meta">HR · v2.1 · Mar 2026</div>
+          </div>
+          <span class="doc-status status-action">Action Needed</span>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">PL</div>
+          <div class="doc-info">
+            <div class="doc-name">Parental Leave Policy</div>
+            <div class="doc-meta">HR · v2.1 · Feb 2026</div>
+          </div>
+          <span class="doc-status status-review">In Review</span>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">CE</div>
+          <div class="doc-info">
+            <div class="doc-name">Code of Ethics</div>
+            <div class="doc-meta">Legal · v3.0 · Jan 2026</div>
+          </div>
+          <span class="doc-status status-current">Current</span>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">IT</div>
+          <div class="doc-info">
+            <div class="doc-name">IT Security Policy</div>
+            <div class="doc-meta">Legal · v2.3 · Dec 2025</div>
+          </div>
+          <span class="doc-status status-current">Current</span>
+        </div>
+        <div class="doc-row">
+          <div class="doc-abbr">EX</div>
+          <div class="doc-info">
+            <div class="doc-name">Expense Policy</div>
+            <div class="doc-meta">Finance · v2.0 · Nov 2025</div>
+          </div>
+          <span class="doc-status status-current">Current</span>
+        </div>
+      </div>
+
+      <!-- Hidden file input -->
+      <input type="file" id="file-upload" accept=".pdf,.doc,.docx" style="display:none" onchange="handleUpload(event)" />
+
+    </section>
+
     <!-- Placeholder screens (content added later) -->
-    <section id="s-docs"      class="screen"></section>
     <section id="s-open"      class="screen"></section>
     <section id="s-approvals" class="screen"></section>
     <section id="s-edit"      class="screen"></section>
@@ -629,6 +847,64 @@
       document.querySelectorAll('.nav-item[data-screen]').forEach(item => {
         item.classList.toggle('active', item.dataset.screen === id);
       });
+    }
+
+    // ── UPLOAD ───────────────────────────────────────────
+    function triggerUpload() {
+      document.getElementById('file-upload').click();
+    }
+
+    async function handleUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const btn   = document.querySelector('.upload-btn');
+      const toast = document.getElementById('upload-toast');
+
+      btn.textContent = 'UPLOADING...';
+      btn.disabled = true;
+      toast.textContent = '';
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('https://emergehackathon.onrender.com/upload', {
+          method: 'POST',
+          body: formData
+        });
+        if (!res.ok) throw new Error('Server error');
+
+        const data = await res.json();
+        const name = data.filename || file.name;
+        addDocRow(name);
+        toast.textContent = 'Document uploaded and indexed';
+        toast.style.color = '#27ae60';
+      } catch {
+        toast.textContent = 'Upload failed, try again';
+        toast.style.color = '#E8221A';
+      } finally {
+        btn.textContent = '↑ Upload Document';
+        btn.disabled = false;
+        e.target.value = '';
+        setTimeout(() => { toast.textContent = ''; }, 4000);
+      }
+    }
+
+    function addDocRow(filename) {
+      const abbr = filename.replace(/\.[^.]+$/, '').slice(0, 2).toUpperCase();
+      const row = document.createElement('div');
+      row.className = 'doc-row';
+      row.innerHTML = `
+        <div class="doc-abbr">${abbr}</div>
+        <div class="doc-info">
+          <div class="doc-name">${filename}</div>
+          <div class="doc-meta">Just uploaded</div>
+        </div>
+        <span class="doc-status status-review">Processing</span>
+      `;
+      const list = document.getElementById('doc-list');
+      list.insertBefore(row, list.firstChild);
     }
 
     // ── API STATUS ────────────────────────────────────────
