@@ -251,10 +251,188 @@
       padding: 48px 52px;
     }
 
-    #main-content {
+    /* ─── SCREENS ────────────────────────────────────────── */
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; gap: 20px; }
+
+    /* ─── DASHBOARD ──────────────────────────────────────── */
+    .dash-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
       color: var(--muted);
-      font-size: 13px;
     }
+
+    .dash-heading {
+      font-family: var(--font-display);
+      font-size: 48px;
+      letter-spacing: 0.02em;
+      color: var(--black);
+      line-height: 1;
+      margin-top: -4px;
+    }
+
+    /* Alert banner */
+    .alert-banner {
+      background: var(--red);
+      border-radius: 6px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .alert-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .alert-text-main {
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .alert-text-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 2px;
+    }
+
+    /* Section label */
+    .section-label {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+    }
+
+    /* Reg cards */
+    .reg-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+
+    .reg-card.critical {
+      border-left: 3px solid var(--red);
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 9px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .tag-critical { background: var(--red); color: #fff; }
+    .tag-agency   { background: #f0f0f0; color: var(--muted); }
+    .tag-date     { color: var(--muted); font-size: 11px; letter-spacing: 0; text-transform: none; font-weight: 400; padding: 0; background: none; }
+
+    .state-pills {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .state-pill {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .state-pill-dark   { background: var(--black); color: #fff; }
+    .state-pill-muted  { background: #f0f0f0; color: var(--muted); }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--black);
+      margin-top: 10px;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .card-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .affects-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .affects-pill {
+      background: #f5f5f5;
+      color: var(--black);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .cta-btn {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+
+    .cta-btn:hover { opacity: 0.85; }
+    .cta-btn-red   { background: var(--red); color: #fff; }
+    .cta-btn-black { background: var(--black); color: #fff; }
 
     /* ─── SCROLLBAR ──────────────────────────────────────── */
     ::-webkit-scrollbar { width: 5px; }
@@ -283,13 +461,13 @@
 
     <div class="nav-section">
       <div class="nav-section-label">Workspace</div>
-      <div class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard')">
+      <div class="nav-item active" data-screen="s-dash" onclick="showScreen('s-dash')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
           Dashboard
         </div>
       </div>
-      <div class="nav-item" data-screen="documents" onclick="showScreen('documents')">
+      <div class="nav-item" data-screen="s-docs" onclick="showScreen('s-docs')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
           Documents
@@ -299,14 +477,14 @@
 
     <div class="nav-section">
       <div class="nav-section-label">Policies</div>
-      <div class="nav-item" data-screen="open-policies" onclick="showScreen('open-policies')">
+      <div class="nav-item" data-screen="s-open" onclick="showScreen('s-open')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
           Open Policies
         </div>
         <span class="nav-badge">2</span>
       </div>
-      <div class="nav-item" data-screen="approvals" onclick="showScreen('approvals')">
+      <div class="nav-item" data-screen="s-approvals" onclick="showScreen('s-approvals')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
           Approvals
@@ -317,13 +495,13 @@
 
     <div class="nav-section">
       <div class="nav-section-label">Publish</div>
-      <div class="nav-item" data-screen="generate" onclick="showScreen('generate')">
+      <div class="nav-item" data-screen="s-generate" onclick="showScreen('s-generate')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
           Generate
         </div>
       </div>
-      <div class="nav-item" data-screen="version-log" onclick="showScreen('version-log')">
+      <div class="nav-item" data-screen="s-log" onclick="showScreen('s-log')">
         <div class="nav-item-left">
           <span class="nav-dot"></span>
           Version Log
@@ -343,15 +521,111 @@
 
   <!-- ── MAIN ────────────────────────────────────────────── -->
   <main id="main">
-    <div id="main-content">
-      <p>Screens go here</p>
-    </div>
+
+    <!-- DASHBOARD -->
+    <section id="s-dash" class="screen active">
+
+      <div>
+        <div class="dash-eyebrow">(CANON — 01) · 2026</div>
+        <div class="dash-heading">GOOD MORNING, SARA.</div>
+      </div>
+
+      <div class="alert-banner">
+        <div class="alert-dot"></div>
+        <div>
+          <div class="alert-text-main">Action required — 1 critical regulatory update since your last login</div>
+          <div class="alert-text-sub">Canon is watching 6 states · Last checked today</div>
+        </div>
+      </div>
+
+      <div class="section-label">Latest Regulatory Updates</div>
+
+      <!-- Card 1 — Critical -->
+      <div class="reg-card critical">
+        <div class="card-top-row">
+          <div class="card-tags">
+            <span class="tag tag-critical">Critical</span>
+            <span class="tag tag-agency">Dept. of Labor</span>
+            <span class="tag tag-date">Apr 14, 2026</span>
+          </div>
+          <div class="state-pills">
+            <span class="state-pill state-pill-dark">CA</span>
+            <span class="state-pill state-pill-dark">NY</span>
+            <span class="state-pill state-pill-dark">IL</span>
+          </div>
+        </div>
+        <div class="card-title">Remote Worker Expense Reimbursement — Multi-State Mandate</div>
+        <div class="card-desc">CA, NY, and IL now require mandatory reimbursement of all remote work expenses. Your Remote Work Policy has no reimbursement clause.</div>
+        <div class="card-bottom-row">
+          <div class="affects-wrap">
+            Affects:
+            <span class="affects-pill">Remote Work Policy v2.1</span>
+          </div>
+          <button class="cta-btn cta-btn-red" onclick="showScreen('s-edit')">Update Policy →</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="reg-card">
+        <div class="card-top-row">
+          <div class="card-tags">
+            <span class="tag tag-agency">Dept. of Labor</span>
+            <span class="tag tag-date">Apr 10, 2026</span>
+          </div>
+          <div class="state-pills">
+            <span class="state-pill state-pill-muted">OR</span>
+          </div>
+        </div>
+        <div class="card-title">Oregon Paid Leave — Wage Replacement Rate Update 2026</div>
+        <div class="card-desc">Oregon's paid leave wage replacement rate adjusted to 72%. Policies referencing fixed rates may be outdated.</div>
+        <div class="card-bottom-row">
+          <div class="affects-wrap">
+            Affects:
+            <span class="affects-pill">Parental Leave Policy v2.1</span>
+          </div>
+          <button class="cta-btn cta-btn-black" onclick="showScreen('s-edit')">Update Policy →</button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="reg-card">
+        <div class="card-top-row">
+          <div class="card-tags">
+            <span class="tag tag-agency">EEOC</span>
+            <span class="tag tag-date">Mar 28, 2026</span>
+          </div>
+          <div class="state-pills">
+            <span class="state-pill state-pill-muted">Federal</span>
+          </div>
+        </div>
+        <div class="card-title">New Disclosure Requirements for AI-Assisted Hiring</div>
+        <div class="card-desc">EEOC issued updated guidance on disclosure requirements when AI tools are used in candidate screening or hiring decisions.</div>
+        <div class="card-bottom-row">
+          <div class="affects-wrap">
+            Affects:
+            <span class="affects-pill">Hiring & Recruitment Policy</span>
+          </div>
+          <button class="cta-btn cta-btn-black" onclick="showScreen('s-edit')">Update Policy →</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Placeholder screens (content added later) -->
+    <section id="s-docs"      class="screen"></section>
+    <section id="s-open"      class="screen"></section>
+    <section id="s-approvals" class="screen"></section>
+    <section id="s-edit"      class="screen"></section>
+    <section id="s-generate"  class="screen"></section>
+    <section id="s-log"       class="screen"></section>
+
   </main>
 
   <script>
     // ── SCREEN SWITCHING ──────────────────────────────────
     function showScreen(id) {
-      console.log('showScreen:', id);
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
       document.querySelectorAll('.nav-item[data-screen]').forEach(item => {
         item.classList.toggle('active', item.dataset.screen === id);
       });
