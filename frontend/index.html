@@ -1181,6 +1181,41 @@
       text-align: center;
     }
 
+    /* ─── REFRESH BUTTON ────────────────────────────────── */
+    .refresh-btn {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .refresh-btn:hover:not(:disabled) {
+      border-color: var(--black);
+      color: var(--black);
+    }
+
+    .refresh-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .refresh-btn.spinning { animation: spin 0.8s linear infinite; }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
     /* ─── SCROLLBAR ──────────────────────────────────────── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -1285,7 +1320,11 @@
         </div>
       </div>
 
-      <div class="section-label">Latest Regulatory Updates</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="section-label">Latest Regulatory Updates</div>
+        <button class="refresh-btn" id="refresh-btn" onclick="refreshRegulations()">↻ Refresh</button>
+      </div>
+      <div id="refresh-status" style="font-size:11px;color:var(--muted);min-height:14px;margin-top:-8px;"></div>
 
       <!-- Card 1 — Critical -->
       <div class="reg-card critical">
@@ -1581,48 +1620,46 @@
       </div>
 
       <!-- Card 1 -->
-      <div class="approval-card">
-        <div class="approval-top">
-          <div class="approval-avatar">MK</div>
-          <div>
-            <div class="approval-name">Michael K.</div>
-            <div class="approval-role">Legal Counsel</div>
+      <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">MK</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#0a0a0a;">Michael K. · Legal Counsel</div>
+              <div style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Remote Work Policy v2.1</div>
+            </div>
           </div>
-          <span class="approval-pending-pill">Pending</span>
+          <span style="background:#fff8e6;color:#b8860b;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;padding:4px 10px;border-radius:3px;flex-shrink:0;">Pending</span>
         </div>
-        <div class="approval-ai-box">
-          <div class="approval-ai-label">
-            <div class="ai-pulse"></div>
-            Canon AI · Change Summary
-          </div>
-          <div class="approval-ai-text">One change: Expense reimbursement clause added for CA, NY, IL remote workers. No other sections modified. Estimated review time: under 10 minutes.</div>
+        <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">One change: Expense reimbursement clause added for CA, NY, IL remote workers. No other sections affected. Estimated review time: under 10 minutes.</div>
         </div>
-        <div class="approval-btn-row">
-          <button class="btn-outline-red">Redline &amp; Return</button>
-          <button class="btn-primary-sm" style="flex:1;" onclick="showScreen('s-generate')">Approve &amp; Publish →</button>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
+          <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
+          <button style="background:#0a0a0a;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.06em;padding:10px 20px;border-radius:4px;border:none;cursor:pointer;" onclick="showScreen('s-generate')" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Approve &amp; Publish →</button>
         </div>
       </div>
 
       <!-- Card 2 -->
-      <div class="approval-card">
-        <div class="approval-top">
-          <div class="approval-avatar">JD</div>
-          <div>
-            <div class="approval-name">James D.</div>
-            <div class="approval-role">CEO</div>
+      <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:38px;height:38px;border-radius:50%;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">JD</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#0a0a0a;">James D. · CEO</div>
+              <div style="font-size:12px;color:#aaa;margin-top:2px;">Reviewing: Code of Conduct v4.0</div>
+            </div>
           </div>
-          <span class="approval-pending-pill">Pending</span>
+          <span style="background:#fff8e6;color:#b8860b;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;padding:4px 10px;border-radius:3px;flex-shrink:0;">Pending</span>
         </div>
-        <div class="approval-ai-box">
-          <div class="approval-ai-label">
-            <div class="ai-pulse"></div>
-            Canon AI · Change Summary
-          </div>
-          <div class="approval-ai-text">Code of Conduct v4.0 updated. Section 3 revised to reflect updated whistleblower protections. No compensation or benefits sections affected.</div>
+        <div style="background:#f5f5f5;border-radius:6px;padding:12px 14px;margin-top:14px;">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#E8221A;margin-bottom:6px;">Canon AI · Change Summary</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;">Code of Conduct v4.0 — Section 3 revised to reflect updated whistleblower protection guidelines.</div>
         </div>
-        <div class="approval-btn-row">
-          <button class="btn-outline-red">Redline &amp; Return</button>
-          <button class="btn-primary-sm" style="flex:1;" onclick="showScreen('s-generate')">Approve &amp; Publish →</button>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
+          <button style="border:1px solid #E8221A;color:#E8221A;background:#fff;padding:9px 16px;border-radius:4px;font-size:12px;cursor:pointer;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='#fff'">Redline &amp; Return</button>
+          <button style="background:#0a0a0a;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.06em;padding:10px 20px;border-radius:4px;border:none;cursor:pointer;" onclick="showScreen('s-generate')" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Approve &amp; Publish →</button>
         </div>
       </div>
 
