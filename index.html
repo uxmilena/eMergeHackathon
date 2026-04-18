@@ -934,6 +934,253 @@
 
     .btn-primary-sm:hover { opacity: 0.85; }
 
+    /* ─── APPROVALS ─────────────────────────────────────── */
+    .approval-card {
+      background: var(--surface);
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .approval-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .approval-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      color: #555;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0.04em;
+    }
+
+    .approval-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    .approval-role {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 1px;
+    }
+
+    .approval-pending-pill {
+      margin-left: auto;
+      background: #fff8e6;
+      color: #b8860b;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 10px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .approval-ai-box {
+      background: #f5f5f5;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 14px;
+    }
+
+    .approval-ai-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .approval-ai-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .approval-btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn-outline-red {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 4px;
+      border: 1px solid var(--red);
+      background: transparent;
+      color: var(--red);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-outline-red:hover { background: #fff0f0; }
+
+    /* ─── GENERATE ───────────────────────────────────────── */
+    .gen-ai-box {
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+
+    .gen-ai-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .gen-ai-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .output-card {
+      background: var(--surface);
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      user-select: none;
+    }
+
+    .output-card.selected { border: 2px solid var(--black); }
+
+    .output-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .output-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--black);
+    }
+
+    .output-sub {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .gen-btn {
+      width: 100%;
+      background: var(--black);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.06em;
+      padding: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .gen-btn:hover:not(:disabled) { background: var(--red); }
+    .gen-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Outputs panel */
+    .outputs-panel { display: none; }
+    .outputs-panel.visible { display: flex; flex-direction: column; gap: 0; }
+
+    .output-tab-content {
+      background: var(--surface);
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .output-iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      display: block;
+    }
+
+    .output-text-block {
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #444;
+      white-space: pre-wrap;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+      background: #fff;
+      color: var(--black);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .copy-btn:hover { background: var(--black); color: #fff; }
+
+    .email-subject {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      padding: 12px 16px 0;
+    }
+
+    .tldr-block {
+      padding: 20px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #444;
+      text-align: center;
+    }
+
     /* ─── SCROLLBAR ──────────────────────────────────────── */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -1182,8 +1429,7 @@
     </section>
 
     <!-- Placeholder screens (content added later) -->
-    <section id="s-open"      class="screen"></section>
-    <section id="s-approvals" class="screen"></section>
+    <section id="s-open" class="screen"></section>
     <!-- EDIT & REVIEW -->
     <section id="s-edit" class="screen">
 
@@ -1304,8 +1550,197 @@
       </div>
 
     </section>
-    <section id="s-generate"  class="screen"></section>
-    <section id="s-log"       class="screen"></section>
+    <!-- APPROVALS -->
+    <section id="s-approvals" class="screen">
+
+      <div>
+        <div class="edit-eyebrow">Workflow · Step 3 of 4</div>
+        <div class="edit-heading">PENDING APPROVALS</div>
+      </div>
+
+      <div class="stepper">
+        <div class="step">
+          <div class="step-circle done">✓</div>
+          <span class="step-label done">Review</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle done">✓</div>
+          <span class="step-label done">Edit</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle active">3</div>
+          <span class="step-label active">Approve</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle inactive">4</div>
+          <span class="step-label inactive">Publish</span>
+        </div>
+      </div>
+
+      <!-- Card 1 -->
+      <div class="approval-card">
+        <div class="approval-top">
+          <div class="approval-avatar">MK</div>
+          <div>
+            <div class="approval-name">Michael K.</div>
+            <div class="approval-role">Legal Counsel</div>
+          </div>
+          <span class="approval-pending-pill">Pending</span>
+        </div>
+        <div class="approval-ai-box">
+          <div class="approval-ai-label">
+            <div class="ai-pulse"></div>
+            Canon AI · Change Summary
+          </div>
+          <div class="approval-ai-text">One change: Expense reimbursement clause added for CA, NY, IL remote workers. No other sections modified. Estimated review time: under 10 minutes.</div>
+        </div>
+        <div class="approval-btn-row">
+          <button class="btn-outline-red">Redline &amp; Return</button>
+          <button class="btn-primary-sm" style="flex:1;" onclick="showScreen('s-generate')">Approve &amp; Publish →</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="approval-card">
+        <div class="approval-top">
+          <div class="approval-avatar">JD</div>
+          <div>
+            <div class="approval-name">James D.</div>
+            <div class="approval-role">CEO</div>
+          </div>
+          <span class="approval-pending-pill">Pending</span>
+        </div>
+        <div class="approval-ai-box">
+          <div class="approval-ai-label">
+            <div class="ai-pulse"></div>
+            Canon AI · Change Summary
+          </div>
+          <div class="approval-ai-text">Code of Conduct v4.0 updated. Section 3 revised to reflect updated whistleblower protections. No compensation or benefits sections affected.</div>
+        </div>
+        <div class="approval-btn-row">
+          <button class="btn-outline-red">Redline &amp; Return</button>
+          <button class="btn-primary-sm" style="flex:1;" onclick="showScreen('s-generate')">Approve &amp; Publish →</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- GENERATE -->
+    <section id="s-generate" class="screen">
+
+      <div>
+        <div class="edit-eyebrow">Workflow · Step 4 of 4</div>
+        <div class="edit-heading">GENERATE OUTPUTS</div>
+      </div>
+
+      <div class="stepper">
+        <div class="step">
+          <div class="step-circle done">✓</div>
+          <span class="step-label done">Review</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle done">✓</div>
+          <span class="step-label done">Edit</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle done">✓</div>
+          <span class="step-label done">Approve</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle active">4</div>
+          <span class="step-label active">Publish</span>
+        </div>
+      </div>
+
+      <div class="gen-ai-box">
+        <div class="gen-ai-label">
+          <div class="ai-pulse"></div>
+          Canon AI · Distribution Recommendation
+        </div>
+        <div class="gen-ai-text">This update affects remote employees in CA, NY, and IL. Canon recommends: company-wide Slack announcement + branded HTML page + manager email distribution.</div>
+      </div>
+
+      <div class="output-grid" id="output-grid">
+        <div class="output-card selected" onclick="toggleOutputCard(this)">
+          <div class="output-icon" style="background:#f5f5f5;">📄</div>
+          <div>
+            <div class="output-label">Branded PDF</div>
+            <div class="output-sub">Full policy in company template</div>
+          </div>
+        </div>
+        <div class="output-card selected" onclick="toggleOutputCard(this)">
+          <div class="output-icon" style="background:#f0f4ff;">🌐</div>
+          <div>
+            <div class="output-label">HTML Page</div>
+            <div class="output-sub">Intranet announcement page</div>
+          </div>
+        </div>
+        <div class="output-card selected" onclick="toggleOutputCard(this)">
+          <div class="output-icon" style="background:#f5fff0;">#</div>
+          <div>
+            <div class="output-label">Slack Post</div>
+            <div class="output-sub">Formatted company announcement</div>
+          </div>
+        </div>
+        <div class="output-card selected" onclick="toggleOutputCard(this)">
+          <div class="output-icon" style="background:#fff5f0;">✉</div>
+          <div>
+            <div class="output-label">Email Draft</div>
+            <div class="output-sub">Manager distribution copy</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="gen-btn" id="gen-btn" onclick="handleGenerate()">GENERATE &amp; PUBLISH ALL →</button>
+
+      <!-- Outputs panel -->
+      <div class="outputs-panel" id="outputs-panel">
+
+        <div class="section-label" style="margin-bottom:12px;margin-top:4px;">Generated Outputs</div>
+
+        <div class="tab-bar" id="gen-tab-bar">
+          <button class="tab-btn active" onclick="switchGenTab('gen-html', this)">HTML Page</button>
+          <button class="tab-btn" onclick="switchGenTab('gen-slack', this)">Slack Post</button>
+          <button class="tab-btn" onclick="switchGenTab('gen-email', this)">Email</button>
+          <button class="tab-btn" onclick="switchGenTab('gen-tldr', this)">TL;DR</button>
+        </div>
+
+        <div class="output-tab-content">
+
+          <div class="tab-panel active" id="gen-html">
+            <iframe class="output-iframe" id="gen-iframe" srcdoc=""></iframe>
+          </div>
+
+          <div class="tab-panel" id="gen-slack">
+            <div class="output-text-block" id="gen-slack-text">
+              <button class="copy-btn" onclick="copyText('gen-slack-text')">Copy</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="gen-email">
+            <div class="email-subject" id="gen-email-subject"></div>
+            <div class="output-text-block" id="gen-email-text">
+              <button class="copy-btn" onclick="copyText('gen-email-text')">Copy</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="gen-tldr">
+            <div class="tldr-block" id="gen-tldr-text"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="s-log" class="screen"></section>
 
   </main>
 
@@ -1375,6 +1810,91 @@
       `;
       const list = document.getElementById('doc-list');
       list.insertBefore(row, list.firstChild);
+    }
+
+    // ── OUTPUT CARD TOGGLE ────────────────────────────────
+    function toggleOutputCard(el) {
+      el.classList.toggle('selected');
+    }
+
+    // ── GENERATE TAB SWITCHING ────────────────────────────
+    function switchGenTab(panelId, btn) {
+      document.querySelectorAll('#gen-tab-bar .tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#outputs-panel .tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(panelId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // ── COPY TO CLIPBOARD ────────────────────────────────
+    function copyText(elId) {
+      const el = document.getElementById(elId);
+      const text = el.innerText.replace('Copy', '').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = el.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    // ── MOCK DATA ─────────────────────────────────────────
+    const MOCK_OUTPUTS = {
+      html_announcement: `<!DOCTYPE html><html><head><style>body{font-family:sans-serif;max-width:600px;margin:40px auto;padding:0 20px;color:#222;}h1{color:#E8221A;font-size:24px;margin-bottom:8px;}p{line-height:1.7;color:#444;font-size:14px;}.badge{display:inline-block;background:#0a0a0a;color:#fff;font-size:11px;padding:3px 10px;border-radius:4px;margin-bottom:16px;letter-spacing:.1em;text-transform:uppercase;}</style></head><body><div class="badge">Policy Update</div><h1>Cannon LLC — Remote Work Policy</h1><p><strong>Effective today,</strong> the Remote Work Policy has been updated to comply with state labor laws in California, New York, and Illinois.</p><p><strong>What changed:</strong> Employees working remotely in CA, NY, or IL are now entitled to reimbursement for reasonable and necessary work-related expenses — including internet, phone, equipment, and supplies.</p><p>Submit expense claims monthly via the HR portal. Questions? Contact <a href="mailto:hr@cannonllc.com">hr@cannonllc.com</a>.</p></body></html>`,
+      slack_post: `*Policy Update — Remote Work Policy*\n\nEffective today, employees working remotely in CA, NY, or IL are entitled to expense reimbursement. Submit claims monthly via the HR portal.\n\nQuestions? Contact hr@cannonllc.com`,
+      email_subject: `Important: Remote Work Policy Update — Action Required`,
+      email_body: `Dear Managers,\n\nPlease share the following update with your teams in CA, NY, and IL.\n\nThe Remote Work Policy has been updated. Employees in these states are now entitled to reimbursement for reasonable remote work expenses (internet, phone, equipment, supplies).\n\nAction required: Inform your direct reports and direct them to submit claims via the HR portal.\n\nThank you,\nHR Team`,
+      tldr: `Your remote work expense policy just got updated. If you work remotely in California, New York, or Illinois, you can now submit reimbursement claims for internet, phone, and equipment costs. Use the HR portal to submit monthly.`
+    };
+
+    // ── HANDLE GENERATE ───────────────────────────────────
+    async function handleGenerate() {
+      const btn = document.getElementById('gen-btn');
+      btn.textContent = 'GENERATING...';
+      btn.disabled = true;
+
+      let data = null;
+
+      try {
+        const res = await fetch('https://emergehackathon.onrender.com/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            policy_text: 'Employees working remotely in CA, NY, or IL are entitled to reimbursement for reasonable and necessary work-related expenses including internet, phone, equipment, and supplies. Expenses must be submitted monthly via the HR portal.',
+            company_name: 'Cannon LLC',
+            states: ['CA', 'NY', 'IL'],
+            change_summary: 'Added expense reimbursement clause for CA, NY, IL remote workers per updated state labor laws.'
+          })
+        });
+        if (!res.ok) throw new Error('Server error');
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      const html    = data?.html_announcement    || MOCK_OUTPUTS.html_announcement;
+      const slack   = data?.slack_post           || MOCK_OUTPUTS.slack_post;
+      const emailSub= data?.email_subject        || MOCK_OUTPUTS.email_subject;
+      const emailBod= data?.email_body           || MOCK_OUTPUTS.email_body;
+      const tldr    = data?.tldr                 || MOCK_OUTPUTS.tldr;
+
+      // Populate outputs
+      document.getElementById('gen-iframe').srcdoc = html;
+
+      const slackEl = document.getElementById('gen-slack-text');
+      slackEl.textContent = slack;
+      slackEl.insertAdjacentHTML('beforeend', '<button class="copy-btn" onclick="copyText(\'gen-slack-text\')">Copy</button>');
+
+      document.getElementById('gen-email-subject').textContent = 'Subject: ' + emailSub;
+      const emailEl = document.getElementById('gen-email-text');
+      emailEl.textContent = emailBod;
+      emailEl.insertAdjacentHTML('beforeend', '<button class="copy-btn" onclick="copyText(\'gen-email-text\')">Copy</button>');
+
+      document.getElementById('gen-tldr-text').textContent = tldr;
+
+      // Show panel
+      document.getElementById('outputs-panel').classList.add('visible');
+
+      btn.textContent = 'GENERATED ✓';
+      btn.style.background = '#27ae60';
     }
 
     // ── EDIT TABS ─────────────────────────────────────────
