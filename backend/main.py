@@ -452,6 +452,10 @@ class GenerateRequest(BaseModel):
     states: List[str]
     approved_findings: Optional[List[dict]] = None
 
+class CompanyProfile(BaseModel):
+    description: str
+    states: Optional[List[str]] = None
+
 
 # ---------- Endpoints ----------
 
@@ -547,23 +551,23 @@ async def get_federal_regulations(
     }
 
 @app.get("/dashboard-sync")
-async def dashboard_sync():
+async def dashboard_sync(topics: Optional[str] = None):
     """
-    Live pull of recent DOL rules across all watched topics.
-    Returns dashboard-ready cards sorted by publication date.
+    Live pull of recent DOL rules. Optionally pass comma-separated topics to
+    override the defaults (e.g., ?topics=remote%20work,overtime,FMLA).
     """
-    topics = DEFAULT_FEDERAL_TOPICS  # ["overtime", "wage and hour", "family medical leave"]
+    topic_list = [t.strip() for t in topics.split(",")] if topics else DEFAULT_FEDERAL_TOPICS
     
     try:
         async with httpx.AsyncClient(timeout=20.0) as client:
-            tasks = [_fetch_fr_topic(client, t) for t in topics]
+            tasks = [_fetch_fr_topic(client, t) for t in topic_list]
             results = await asyncio.gather(*tasks, return_exceptions=True)
     except Exception as e:
         raise HTTPException(502, f"Federal Register sync failed: {e}")
     
     cards = []
     seen_urls = set()
-    for topic, result in zip(topics, results):
+    for topic, result in zip(topic_list, results):
         if isinstance(result, Exception):
             continue
         for doc in result:
@@ -574,7 +578,6 @@ async def dashboard_sync():
             
             title = doc.get("title") or "Untitled rule"
             abstract = (doc.get("abstract") or "").strip()
-            # Abstracts can be long; truncate for card display
             if len(abstract) > 260:
                 abstract = abstract[:257].rstrip() + "…"
             
@@ -589,17 +592,65 @@ async def dashboard_sync():
                 "doc_type": doc.get("type", "Rule"),
             })
     
-    # Sort newest first
     cards.sort(key=lambda c: c.get("date") or "", reverse=True)
     
     return {
         "synced_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
         "sources_checked": ["Federal Register (DOL)"],
-        "topics_watched": topics,
+        "topics_watched": topic_list,
         "card_count": len(cards),
-        "cards": cards[:10],  # cap at 10 for clean UI
+        "cards": cards[:10],
     }
+
+
+@app.post("/company-profile")
+async def set_company_profile(profile: CompanyProfile):
+    """
+    Takes a plain-English company description, returns tailored Federal Register
+    search topics that will surface relevant regulations.
+    """
+    system_prompt = (
+        "You are a compliance analyst. Given a plain-English company description, "
+        "generate 3-5 Federal Register search queries that will surface ONLY "
+        "regulations relevant to that company's operations. Exclude industry-specific "
+        "regulations that don't apply (e.g., for a SaaS company, exclude agricultural, "
+        "maritime, mining, construction topics). Return ONLY a JSON object, no prose."
+    )
     
+    user_prompt = f"""Company description: "{profile.description}"
+
+Return a JSON object with these exact keys:
+- "topics": array of 3-5 short Federal Register search queries (2-4 words each). These queries will be used verbatim against the Federal Register API. Focus on the employment categories, worker types, and workplace practices that actually apply to this company.
+- "industry_summary": one-sentence plain-English summary of what this company does
+- "excluded_domains": array of industry categories you deliberately excluded (e.g., "agricultural workers", "mining safety")
+
+For a "remote SaaS company" the topics should focus on things like: remote work, overtime exempt classification, wage and hour, FMLA, ADA accommodation — NOT H-2A agricultural workers, mining safety, maritime."""
+
+    client = get_claude()
+    try:
+        resp = await asyncio.to_thread(
+            client.messages.create,
+            model=CLAUDE_MODEL,
+            max_tokens=1024,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+    except Exception as e:
+        raise HTTPException(502, f"Claude API error: {e}")
+    
+    raw = extract_claude_text(resp)
+    try:
+        profile_data = parse_json_response(raw)
+    except json.JSONDecodeError as e:
+        raise HTTPException(500, f"Claude returned non-JSON: {e}\n---\n{raw[:500]}")
+    
+    return {
+        "description": profile.description,
+        "topics": profile_data.get("topics", []),
+        "industry_summary": profile_data.get("industry_summary", ""),
+        "excluded_domains": profile_data.get("excluded_domains", []),
+        "states": profile.states or [],
+    }
 @app.post("/state-regulations")
 def get_state_regulations(req: StatesRequest):
     """Return curated labor-law rules for requested states."""
