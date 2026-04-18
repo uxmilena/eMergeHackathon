@@ -1102,6 +1102,44 @@
       margin-top: 2px;
     }
 
+    /* ─── TONE SELECTOR ─────────────────────────────────── */
+    .tone-label {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .tone-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tone-pill {
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-family: var(--font-body);
+      cursor: pointer;
+      background: #fff;
+      color: #888;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+
+    .tone-pill:hover { border-color: #aaa; color: #555; }
+
+    .tone-pill.selected {
+      background: var(--black);
+      color: #fff;
+      border-color: var(--black);
+    }
+
     .gen-btn {
       width: 100%;
       background: var(--black);
@@ -1349,7 +1387,7 @@
             Affects:
             <span class="affects-pill">Remote Work Policy v2.1</span>
           </div>
-          <button class="cta-btn cta-btn-red" onclick="showScreen('s-edit')">Update Policy →</button>
+          <button class="cta-btn cta-btn-red" onclick="showEditScreen('card1')">Update Policy →</button>
         </div>
       </div>
 
@@ -1371,7 +1409,7 @@
             Affects:
             <span class="affects-pill">Parental Leave Policy v2.1</span>
           </div>
-          <button class="cta-btn cta-btn-black" onclick="showScreen('s-edit')">Update Policy →</button>
+          <button class="cta-btn cta-btn-black" onclick="showEditScreen('card2')">Update Policy →</button>
         </div>
       </div>
 
@@ -1393,7 +1431,7 @@
             Affects:
             <span class="affects-pill">Hiring & Recruitment Policy</span>
           </div>
-          <button class="cta-btn cta-btn-black" onclick="showScreen('s-edit')">Update Policy →</button>
+          <button class="cta-btn cta-btn-black" onclick="showEditScreen('card3')">Update Policy →</button>
         </div>
       </div>
       <div id="live-sync-section" style="display:none;margin-top:24px;">
@@ -1514,6 +1552,17 @@
           CANON AI · Ready to analyze your policy
         </div>
         <button class="ai-run-btn" id="analyze-btn" onclick="runAnalysis()">Run Analysis →</button>
+      </div>
+
+      <!-- Analysis Summary Box -->
+      <div id="analysis-summary" style="display:none;margin-bottom:4px;">
+        <div style="background:#0a0a0a;border-radius:10px;padding:24px 28px;border-left:4px solid #E8221A;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#E8221A;flex-shrink:0;animation:pulse 1.4s ease-in-out infinite;"></div>
+            <span style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.5);">CANON AI · SUMMARY OF REQUIRED CHANGES</span>
+          </div>
+          <div id="analysis-summary-content" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
       </div>
 
       <!-- Side by side panels -->
@@ -1740,6 +1789,14 @@
         </div>
       </div>
 
+      <div class="tone-label">Announcement Tone</div>
+      <div class="tone-pills" id="tone-pills">
+        <button class="tone-pill selected" onclick="selectTone(this, 'Professional')">Professional</button>
+        <button class="tone-pill" onclick="selectTone(this, 'Company-Wide')">Company-Wide</button>
+        <button class="tone-pill" onclick="selectTone(this, 'Celebratory')">Celebratory 🎉</button>
+        <button class="tone-pill" onclick="selectTone(this, 'Urgent')">Urgent ⚠</button>
+      </div>
+
       <button class="gen-btn" id="gen-btn" onclick="handleGenerate()">GENERATE &amp; PUBLISH ALL →</button>
 
       <!-- Outputs panel -->
@@ -1795,6 +1852,123 @@
       document.querySelectorAll('.nav-item[data-screen]').forEach(item => {
         item.classList.toggle('active', item.dataset.screen === id);
       });
+    }
+
+    // ── CARD DATA ─────────────────────────────────────────
+    const CARD_DATA = {
+      card1: {
+        eyebrow: 'Policy Update · Remote Work Policy v2.1 · CA · NY · IL',
+        heading: 'WHAT NEEDS TO CHANGE',
+        reg: {
+          pill: 'Dept. of Labor · Apr 14',
+          title: 'Remote Worker Expense Reimbursement',
+          text: 'Employers in CA, NY, and IL must reimburse employees for all reasonable remote work expenses including internet, phone, equipment, and supplies required to perform job duties.',
+          flag: 'Your policy has no expense reimbursement clause for remote workers in these states.'
+        },
+        policy: {
+          pill: 'Remote Work Policy v2.1',
+          title: 'Section 4 — Equipment & Resources',
+          text: 'The company will provide employees with necessary hardware for remote work including laptop and monitor where applicable.',
+          flag: 'Missing: No expense reimbursement obligations mentioned.',
+          suggest: 'Canon suggests: "Employees in CA, NY, or IL are entitled to reimbursement for reasonable remote work expenses. Submit monthly via HR portal."'
+        },
+        textarea: 'Employees working remotely in CA, NY, or IL are entitled to reimbursement for reasonable and necessary work-related expenses. This includes internet, phone, equipment, and supplies required to perform their duties. Expenses must be submitted monthly via the HR portal.',
+        states: ['CA', 'NY', 'IL'],
+        policyText: 'The company will provide employees with necessary hardware for remote work including laptop and monitor.',
+        summary: [
+          { label: 'Regulation', text: 'Dept. of Labor mandate effective Apr 14, 2026 — expense reimbursement required in CA, NY, and IL.' },
+          { label: 'Gap identified', text: 'Section 4 of Remote Work Policy v2.1 has no reimbursement clause covering internet, phone, or equipment costs.' },
+          { label: 'Required change', text: 'Add an expense reimbursement section covering all remote employees in CA, NY, and IL, with a monthly HR portal submission process.' },
+          { label: 'Risk if unchanged', text: 'Non-compliance exposure in 3 states. Potential wage claim liability under CA Labor Code §2802, NY Labor Law, and IL Wage Payment Act.' }
+        ]
+      },
+      card2: {
+        eyebrow: 'Policy Update · Parental Leave Policy v2.1 · OR',
+        heading: 'WHAT NEEDS TO CHANGE',
+        reg: {
+          pill: 'Dept. of Labor · Apr 10',
+          title: 'Oregon Paid Leave — Wage Replacement Rate Update 2026',
+          text: 'Oregon\'s paid leave wage replacement rate has been adjusted to 72% for 2026. Any policy referencing a fixed percentage must be updated to reflect the current rate set by Oregon\'s Paid Leave program.',
+          flag: 'Your policy references a 60% rate, which is now outdated under Oregon\'s 2026 adjustment.'
+        },
+        policy: {
+          pill: 'Parental Leave Policy v2.1',
+          title: 'Section 3 — Wage Replacement',
+          text: 'Eligible employees will receive wage replacement at a rate of 60% of their average weekly wage during approved leave.',
+          flag: 'Outdated: Oregon now mandates 72% wage replacement rate effective January 1, 2026.',
+          suggest: 'Canon suggests: "Employees on Oregon Paid Leave will receive wage replacement at 72% of their average weekly wage, effective January 1, 2026."'
+        },
+        textarea: 'Eligible employees in Oregon on approved paid leave will receive wage replacement at 72% of their average weekly wage, effective January 1, 2026, in compliance with Oregon\'s updated Paid Leave rate.',
+        states: ['OR'],
+        policyText: 'Eligible employees will receive wage replacement at a rate of 60% of their average weekly wage during approved leave.',
+        summary: [
+          { label: 'Regulation', text: 'Oregon Dept. of Labor adjusted the 2026 paid leave wage replacement rate from 60% to 72%, effective January 1, 2026.' },
+          { label: 'Gap identified', text: 'Section 3 of Parental Leave Policy v2.1 still references the old 60% rate.' },
+          { label: 'Required change', text: 'Update Section 3 to reflect the 72% wage replacement rate and add an effective date of January 1, 2026.' },
+          { label: 'Risk if unchanged', text: 'Underpayment of Oregon employees on leave. Potential ORS 659A complaint and Oregon BOLI enforcement action.' }
+        ]
+      },
+      card3: {
+        eyebrow: 'Policy Update · Hiring & Recruitment Policy · Federal',
+        heading: 'WHAT NEEDS TO CHANGE',
+        reg: {
+          pill: 'EEOC · Mar 28',
+          title: 'New Disclosure Requirements for AI-Assisted Hiring',
+          text: 'EEOC guidance requires employers using AI tools in candidate screening or hiring decisions to disclose this use to applicants in writing, document the tools used, and maintain records demonstrating non-discriminatory outcomes.',
+          flag: 'Your hiring policy contains no disclosure requirements for AI-assisted screening tools.'
+        },
+        policy: {
+          pill: 'Hiring & Recruitment Policy',
+          title: 'Section 2 — Candidate Screening',
+          text: 'The company uses a combination of resume review and structured interviews to evaluate candidates. Screening criteria are based on job requirements and competencies.',
+          flag: 'Missing: No AI tool disclosure, human review requirement, or documentation obligations.',
+          suggest: 'Canon suggests: "Where AI tools are used in candidate screening, applicants will be notified in writing. All AI-assisted decisions are subject to human review and documented for EEOC compliance."'
+        },
+        textarea: 'Where AI-assisted tools are used in candidate screening or hiring decisions, applicants will be notified in writing prior to screening. All AI-assisted decisions will be subject to human review. Records of AI tools used and outcomes will be maintained in accordance with EEOC guidance.',
+        states: ['Federal'],
+        policyText: 'The company uses a combination of resume review and structured interviews to evaluate candidates.',
+        summary: [
+          { label: 'Regulation', text: 'EEOC issued updated guidance Mar 28, 2026 — employers must disclose AI use in hiring to all applicants.' },
+          { label: 'Gap identified', text: 'Section 2 of Hiring & Recruitment Policy has no mention of AI tools, disclosure obligations, or human review requirements.' },
+          { label: 'Required change', text: 'Add an AI disclosure clause to Section 2 covering: written applicant notice, mandatory human review of AI decisions, and recordkeeping.' },
+          { label: 'Risk if unchanged', text: 'EEOC enforcement exposure. Title VII disparate impact liability if AI screening produces discriminatory outcomes without documented oversight.' }
+        ]
+      }
+    };
+
+    let currentCard = 'card1';
+
+    function showEditScreen(cardId) {
+      currentCard = cardId;
+      const d = CARD_DATA[cardId];
+
+      // Header
+      document.querySelector('#s-edit .edit-eyebrow').textContent = d.eyebrow;
+      document.querySelector('#s-edit .edit-heading').textContent = d.heading;
+
+      // Regulation panel
+      document.querySelector('#s-edit .panel-pill-red').textContent = d.reg.pill;
+      document.querySelector('#s-edit .edit-panels .edit-panel:first-child .panel-title').textContent = d.reg.title;
+      document.querySelector('#s-edit .edit-panels .edit-panel:first-child .panel-text').textContent = d.reg.text;
+      document.getElementById('reg-flag').textContent = d.reg.flag;
+
+      // Policy panel
+      document.querySelector('#s-edit .panel-pill-gray').textContent = d.policy.pill;
+      document.querySelector('#s-edit .edit-panels .edit-panel:last-child .panel-title').textContent = d.policy.title;
+      document.querySelector('#s-edit .edit-panels .edit-panel:last-child .panel-text').textContent = d.policy.text;
+      document.getElementById('policy-flag').textContent = d.policy.flag;
+      document.getElementById('canon-suggest').textContent = d.policy.suggest;
+
+      // Textarea
+      document.getElementById('edit-textarea').value = d.textarea;
+
+      // Reset analysis
+      const btn = document.getElementById('analyze-btn');
+      btn.textContent = 'Run Analysis →';
+      btn.disabled = false;
+      document.getElementById('analysis-summary').style.display = 'none';
+
+      showScreen('s-edit');
     }
 
     // ── UPLOAD ───────────────────────────────────────────
@@ -1853,6 +2027,173 @@
       `;
       const list = document.getElementById('doc-list');
       list.insertBefore(row, list.firstChild);
+    }
+
+    // ── TONE SELECTOR ─────────────────────────────────────
+    let selectedTone = 'Professional';
+
+    function selectTone(el, tone) {
+      document.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedTone = tone;
+    }
+
+    // ── TONE-AWARE HTML BUILDER ───────────────────────────
+    function buildMockHTML(tone) {
+      const configs = {
+        'Professional': {
+          heroBg: '#0a0a0a',
+          heroLine: '#E8221A',
+          heroTitle: 'YOUR REMOTE<br/>WORK POLICY<br/>JUST CHANGED.',
+          heroSub: 'New state-level requirements affect how we handle remote work expenses. Here is what you need to know.',
+          extraBanner: '',
+        },
+        'Company-Wide': {
+          heroBg: '#0a0a0a',
+          heroLine: '#E8221A',
+          heroTitle: 'YOUR REMOTE<br/>WORK POLICY<br/>JUST CHANGED.',
+          heroSub: 'This update affects all employees with remote work arrangements.',
+          extraBanner: '',
+        },
+        'Celebratory': {
+          heroBg: '#22a86e',
+          heroLine: '#f5c518',
+          heroTitle: 'GREAT NEWS FOR<br/>REMOTE<br/>WORKERS.',
+          heroSub: 'We have updated our policy to better support you. Expense reimbursement is now available in CA, NY, and IL.',
+          extraBanner: '',
+        },
+        'Urgent': {
+          heroBg: '#0a0a0a',
+          heroLine: '#E8221A',
+          heroTitle: 'ACTION REQUIRED:<br/>POLICY<br/>UPDATE.',
+          heroSub: 'Immediate action required. New state mandates affect remote employees in CA, NY, and IL.',
+          extraBanner: `<div style="background:#E8221A;padding:14px 52px;display:flex;align-items:center;gap:12px;"><div style="width:8px;height:8px;border-radius:50%;background:#fff;flex-shrink:0;"></div><div style="font-size:13px;font-weight:500;color:#fff;">Deadline: Submit your first expense claim by May 1, 2026</div></div>`,
+        },
+      };
+
+      const c = configs[tone] || configs['Professional'];
+
+      return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
+.hero{background:${c.heroBg};padding:48px 52px 40px;position:relative;overflow:hidden;}
+.hero-line{position:absolute;top:0;left:0;width:100%;height:3px;background:${c.heroLine};}
+.hero-line-bottom{position:absolute;bottom:0;left:0;width:100%;height:3px;background:#E8221A;}
+.hero-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px);}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;position:relative;}
+.hero-brand{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.12em;color:white;}
+.hero-brand span{color:${c.heroLine};}
+.hero-date{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
+.hero-label{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:${c.heroLine};margin-bottom:14px;position:relative;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:56px;color:white;line-height:0.95;letter-spacing:0.02em;margin-bottom:16px;position:relative;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.6;max-width:480px;position:relative;}
+.hero-states{display:flex;gap:8px;margin-top:24px;position:relative;flex-wrap:wrap;}
+.state-pill{background:#E8221A;color:white;padding:5px 12px;border-radius:3px;font-size:11px;font-weight:600;letter-spacing:0.08em;}
+.state-pill.gray{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);}
+.section{padding:32px 52px;border-bottom:1px solid #e8e8e8;}
+.sec-label{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#bbb;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:'';flex:1;height:1px;background:#e8e8e8;}
+.change-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.change-card{background:white;border:1px solid #e8e8e8;border-radius:8px;padding:20px;}
+.change-card.red{border-top:3px solid #E8221A;}
+.change-card.green{border-top:3px solid #22a86e;}
+.change-num{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#E8221A;margin-bottom:8px;font-weight:600;}
+.change-num.green{color:#22a86e;}
+.change-title{font-size:14px;font-weight:500;color:#0a0a0a;margin-bottom:6px;line-height:1.3;}
+.change-text{font-size:12px;color:#777;line-height:1.6;}
+.step-row{display:flex;flex-direction:column;gap:8px;}
+.step{display:flex;align-items:flex-start;gap:16px;background:white;border:1px solid #e8e8e8;border-radius:8px;padding:16px 18px;}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#E8221A;min-width:32px;line-height:1;}
+.step-title{font-size:13px;font-weight:500;margin-bottom:4px;}
+.step-text{font-size:12px;color:#777;line-height:1.5;}
+.who-section{padding:24px 52px;background:white;}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+.who-card{background:#fafafa;border:1px solid #e8e8e8;border-radius:6px;padding:14px 16px;}
+.who-role{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:#bbb;margin-bottom:4px;}
+.who-name{font-size:13px;font-weight:500;color:#0a0a0a;}
+.action-section{background:#0a0a0a;padding:32px 52px;display:flex;align-items:center;justify-content:space-between;}
+.action-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;}
+.action-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:white;letter-spacing:0.04em;}
+.action-btn{background:#E8221A;color:white;border:none;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;}
+.footer{background:#f0f0f0;padding:16px 52px;display:flex;align-items:center;justify-content:space-between;}
+.footer-left{font-size:11px;color:#999;}
+.footer-right{display:flex;align-items:center;gap:8px;}
+.footer-pill{font-size:10px;background:#e0e0e0;color:#666;padding:3px 8px;border-radius:3px;letter-spacing:0.06em;}
+.footer-pill.approved{background:#e8f5ee;color:#22a86e;}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-line"></div>
+  ${tone === 'Urgent' ? '<div class="hero-line-bottom"></div>' : ''}
+  <div class="hero-grid"></div>
+  <div class="hero-top">
+    <div class="hero-brand">CANNON <span>LLC</span></div>
+    <div class="hero-date">April 18, 2026 · People Operations</div>
+  </div>
+  <div class="hero-label">Policy Update · Remote Work</div>
+  <div class="hero-title">${c.heroTitle}</div>
+  <div class="hero-sub">${c.heroSub}</div>
+  <div class="hero-states">
+    <span class="state-pill">CA</span>
+    <span class="state-pill">NY</span>
+    <span class="state-pill">IL</span>
+    <span class="state-pill gray">Not affected: TX · FL · OR</span>
+  </div>
+</div>
+${c.extraBanner}
+<div class="section">
+  <div class="sec-label">What changed</div>
+  <div class="change-row">
+    <div class="change-card red">
+      <div class="change-num">Before</div>
+      <div class="change-title">No expense reimbursement policy</div>
+      <div class="change-text">The company provided hardware but had no obligation to reimburse ongoing remote work costs like internet or phone.</div>
+    </div>
+    <div class="change-card green">
+      <div class="change-num green">After</div>
+      <div class="change-title">Reimbursement now required in 3 states</div>
+      <div class="change-text">Employees in CA, NY, and IL are entitled to reimbursement for reasonable remote work expenses including internet, phone, and equipment.</div>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-label">What you need to do</div>
+  <div class="step-row">
+    <div class="step"><div class="step-num">01</div><div><div class="step-title">Submit expenses monthly</div><div class="step-text">Log into the HR portal and submit your expense report by the last day of each month.</div></div></div>
+    <div class="step"><div class="step-num">02</div><div><div class="step-title">Check if you are eligible</div><div class="step-text">This applies to full-time remote employees in California, New York, and Illinois only.</div></div></div>
+    <div class="step"><div class="step-num">03</div><div><div class="step-title">Questions? Contact HR</div><div class="step-text">Reach out to hr@cannonllc.com for questions about eligibility or the submission process.</div></div></div>
+  </div>
+</div>
+<div class="who-section">
+  <div class="sec-label">Approved by</div>
+  <div class="who-grid">
+    <div class="who-card"><div class="who-role">HR Manager</div><div class="who-name">Sara R.</div></div>
+    <div class="who-card"><div class="who-role">Legal Counsel</div><div class="who-name">Michael K.</div></div>
+    <div class="who-card"><div class="who-role">Effective Date</div><div class="who-name">April 18, 2026</div></div>
+  </div>
+</div>
+<div class="action-section">
+  <div>
+    <div class="action-label">Next step</div>
+    <div class="action-title">SUBMIT YOUR FIRST CLAIM</div>
+  </div>
+  <button class="action-btn">Open HR Portal</button>
+</div>
+<div class="footer">
+  <div class="footer-left">Cannon LLC · Remote Work Policy v2.2 · Generated by Canon Policy OS · Tone: ${tone}</div>
+  <div class="footer-right">
+    <span class="footer-pill approved">Legal Approved</span>
+    <span class="footer-pill">v2.2</span>
+  </div>
+</div>
+</body>
+</html>`;
     }
 
     // ── OUTPUT CARD TOGGLE ────────────────────────────────
@@ -2102,19 +2443,32 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
     }
 
     // ── ANALYZE ───────────────────────────────────────────
+    function renderSummary(items) {
+      const container = document.getElementById('analysis-summary-content');
+      container.innerHTML = items.map(item => `
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#E8221A;white-space:nowrap;min-width:110px;padding-top:2px;font-weight:600;">${item.label}</span>
+          <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.55;">${item.text}</span>
+        </div>
+      `).join('<div style="height:1px;background:rgba(255,255,255,0.06);margin:2px 0;"></div>');
+      document.getElementById('analysis-summary').style.display = 'block';
+    }
+
     async function runAnalysis() {
       const btn = document.getElementById('analyze-btn');
       btn.textContent = 'ANALYZING...';
       btn.disabled = true;
+
+      const card = CARD_DATA[currentCard];
 
       try {
         const res = await fetch('https://emergehackathon.onrender.com/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            policy_text: 'The company will provide employees with necessary hardware for remote work including laptop and monitor.',
-            states: ['CA', 'NY', 'IL'],
-            company_name: 'Acme Corp'
+            policy_text: card.policyText,
+            states: card.states,
+            company_name: 'Cannon LLC'
           })
         });
 
@@ -2133,10 +2487,16 @@ body{font-family:'DM Sans',sans-serif;background:#fafafa;color:#0a0a0a;}
           document.getElementById('canon-suggest').textContent = 'Canon suggests: "' + suggest + '"';
         }
 
+        // Build summary from API response + card data
+        const summaryItems = [...card.summary];
+        if (suggest) summaryItems[2] = { label: 'AI suggestion', text: suggest };
+        renderSummary(summaryItems);
+
         btn.textContent = 'Analysis Complete ✓';
       } catch {
-        btn.textContent = 'Run Analysis →';
-        btn.disabled = false;
+        // Fall back to mock summary from card data
+        renderSummary(card.summary);
+        btn.textContent = 'Analysis Complete ✓';
       }
     }
 
