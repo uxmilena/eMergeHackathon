@@ -1838,11 +1838,11 @@
 
     // ── MOCK DATA ─────────────────────────────────────────
     const MOCK_OUTPUTS = {
-      html_announcement: `<!DOCTYPE html><html><head><style>body{font-family:sans-serif;max-width:600px;margin:40px auto;padding:0 20px;color:#222;}h1{color:#E8221A;font-size:24px;margin-bottom:8px;}p{line-height:1.7;color:#444;font-size:14px;}.badge{display:inline-block;background:#0a0a0a;color:#fff;font-size:11px;padding:3px 10px;border-radius:4px;margin-bottom:16px;letter-spacing:.1em;text-transform:uppercase;}</style></head><body><div class="badge">Policy Update</div><h1>Cannon LLC — Remote Work Policy</h1><p><strong>Effective today,</strong> the Remote Work Policy has been updated to comply with state labor laws in California, New York, and Illinois.</p><p><strong>What changed:</strong> Employees working remotely in CA, NY, or IL are now entitled to reimbursement for reasonable and necessary work-related expenses — including internet, phone, equipment, and supplies.</p><p>Submit expense claims monthly via the HR portal. Questions? Contact <a href="mailto:hr@cannonllc.com">hr@cannonllc.com</a>.</p></body></html>`,
-      slack_post: `*Policy Update — Remote Work Policy*\n\nEffective today, employees working remotely in CA, NY, or IL are entitled to expense reimbursement. Submit claims monthly via the HR portal.\n\nQuestions? Contact hr@cannonllc.com`,
-      email_subject: `Important: Remote Work Policy Update — Action Required`,
-      email_body: `Dear Managers,\n\nPlease share the following update with your teams in CA, NY, and IL.\n\nThe Remote Work Policy has been updated. Employees in these states are now entitled to reimbursement for reasonable remote work expenses (internet, phone, equipment, supplies).\n\nAction required: Inform your direct reports and direct them to submit claims via the HR portal.\n\nThank you,\nHR Team`,
-      tldr: `Your remote work expense policy just got updated. If you work remotely in California, New York, or Illinois, you can now submit reimbursement claims for internet, phone, and equipment costs. Use the HR portal to submit monthly.`
+      html_announcement: `<div style="font-family:sans-serif;padding:40px;background:#fff"><h1 style="color:#E8221A;font-size:32px;">Cannon LLC</h1><h2 style="font-size:20px;margin-top:8px;">Remote Work Policy Update</h2><p style="color:#666;margin-top:16px;">Effective today, employees working remotely in CA, NY, or IL are entitled to reimbursement for reasonable remote work expenses.</p><p style="color:#666;margin-top:8px;">Submit claims monthly via the HR portal. Questions? Contact hr@cannonllc.com</p></div>`,
+      slack_post: `*Policy Update — Remote Work Policy*\n\nEffective today, remote employees in CA, NY, and IL can submit expense reimbursement claims for internet, phone, and equipment. Submit via the HR portal monthly. Questions? Reach out to HR.`,
+      email_subject: `Important: Remote Work Policy Update`,
+      email_body: `Dear Managers,\n\nPlease share this update with your teams in CA, NY, and IL. Effective today, remote employees are entitled to expense reimbursement. Details in the HR portal.`,
+      tldr: `If you work remotely in CA, NY, or IL — you can now submit expense reimbursement claims for internet, phone, and equipment. Use the HR portal monthly.`
     };
 
     // ── HANDLE GENERATE ───────────────────────────────────
