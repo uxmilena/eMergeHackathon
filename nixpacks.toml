@@ -1,0 +1,15 @@
+# Monorepo: API lives in /backend. Use when Railway "Root Directory" is the repo root.
+# Recommended: set Railway Root Directory to `backend` and use backend/nixpacks.toml only.
+
+providers = ["python"]
+
+[phases.install]
+dependsOn = ["setup"]
+cmds = [
+  "python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r backend/requirements.txt",
+]
+paths = ["/opt/venv/bin"]
+cacheDirectories = ["/root/.cache/pip"]
+
+[start]
+cmd = "cd backend && /opt/venv/bin/uvicorn main:app --host 0.0.0.0 --port $PORT"
